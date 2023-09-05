@@ -1,0 +1,57 @@
+[
+    {
+        "number": "0",
+        "hint": "ling6",
+        "sprite": [0, 684]
+    },
+    {
+        "number": "1",
+        "hint": "jat1",
+        "sprite": [1100, 626]
+    },
+    {
+        "number": "2",
+        "hint": "ji6",
+        "sprite": [2179, 707]
+    },
+    {
+        "number": "3",
+        "hint": "saam1",
+        "sprite": [3338, 834]
+    },
+    {
+        "number": "4",
+        "hint": "sei3",
+        "sprite": [4636, 788]
+    },
+    {
+        "number": "5",
+        "hint": "ng5",
+        "sprite": [5992, 603]
+    },
+    {
+        "number": "6",
+        "hint": "luk6",
+        "sprite": [7069, 568]
+    },
+    {
+        "number": "7",
+        "hint": "cat1",
+        "sprite": [8182, 603]
+    },
+    {
+        "number": "8",
+        "hint": "baat3",
+        "sprite": [9295, 637]
+    },
+    {
+        "number": "9",
+        "hint": "gau2",
+        "sprite": [10419, 684]
+    },
+    {
+        "number": "10",
+        "hint": "sap6",
+        "sprite": [11612, 626]
+    }
+]

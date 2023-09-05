@@ -11,6 +11,9 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 export default defineConfig({
+  optimizeDeps: {
+    exclude: ['vue-demi']
+  },
   plugins: [
     vue(),
     AutoImport({
