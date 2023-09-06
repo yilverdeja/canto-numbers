@@ -7,7 +7,9 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
+    copy: typeof import('./components/play/NumberInput copy.vue')['default']
     HelloWorld: typeof import('./components/HelloWorld.vue')['default']
+    Number2Input: typeof import('./components/play/Number2Input.vue')['default']
     NumberInput: typeof import('./components/play/NumberInput.vue')['default']
     PageFooter: typeof import('./components/base/PageFooter.vue')['default']
     PageHeader: typeof import('./components/base/PageHeader.vue')['default']
