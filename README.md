@@ -12,7 +12,8 @@ Canto Numbers is an open-source game designed to help users learn how to disting
 
 Canto Numbers currently offers the following features:
 
-- Guess numbers from 0-10 with respective Jyutping.
+- Guess numbers from 0-1000 with hints of their respective Jyutping.
+- Generate numbers from 0-999,999,999,999 with their respective Jyutping.
 - Keep track of your correct and missed guesses with a counter score, which is saved on your local host.
 - Requires sound to listen to the audio.
 - Available on both desktop and mobile devices.
@@ -22,7 +23,7 @@ Canto Numbers currently offers the following features:
 Future implementations:
 
 - [ ] Add unit tests.
-- [ ] Expanding the range of numbers.
+- [x] Expanding the range of numbers.
 - [ ] Adding a stats dashboard to see progress.
 - [ ] Incorporating more audio variations for each number.
 - [ ] Add different number categories like single digits, whole numbers, decimals, time, and more.
