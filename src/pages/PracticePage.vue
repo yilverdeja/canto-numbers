@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { debounce } from "lodash-es"
 const route = useRoute()
+const router = useRouter()
 const num = ref()
 const childRef = ref(null)
 
@@ -33,9 +34,13 @@ const focusInput = () => {
 
 const returnHome = debounce((event) => {
     if (event.code == "Space") {
-        start()
+        home()
     }
 }, 100)
+
+const home = () => {
+	router.push('/')
+}
 
 onMounted(() => {
     window.addEventListener("click", focusInput)
@@ -67,7 +72,7 @@ onUnmounted(() => {
 				</div>
                 <div class="flex flex-col md:flex-row text-center justify-center">
                     <button class="text-xl md:text-2xl font-light my-4 px-8 py-2 bg-slate-100 hover:bg-slate-200 rounded-md" @click="submit">submit <span class="hidden md:inline-block">(enter)</span></button>
-					<button class="text-xl md:text-2xl font-light md:ml-4 my-4 px-8 py-2 bg-slate-100 hover:bg-slate-200 rounded-md" @click="$router.push('/')">home <span class="hidden md:inline-block">(space)</span></button>
+					<button class="text-xl md:text-2xl font-light md:ml-4 my-4 px-8 py-2 bg-slate-100 hover:bg-slate-200 rounded-md" @click="home">home <span class="hidden md:inline-block">(space)</span></button>
                 </div>
             </div>
         </div>
