@@ -1,19 +1,8 @@
 <script setup lang="ts">
+/* IMPORTS & CONSTANTS */
+import { debounce } from "lodash-es"
 const route = useRoute()
 const router = useRouter()
-import { useSound } from "@vueuse/sound"
-import correctSfx from "@/assets/audio/correct.mp3"
-import wrongSfx from "@/assets/audio/wrong.mp3"
-import { debounce } from "lodash-es"
-
-console.log(route.name)
-
-// const detectDeviceType = () => {
-//     return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 'Mobile': 'Desktop';
-// }
-
-const { play: playCorrect } = useSound(correctSfx)
-const { play: playWrong } = useSound(wrongSfx)
 
 useHead({
   title: route.meta.title,
@@ -29,6 +18,16 @@ useHead({
   ],
 })
 
+// sound
+import { useSound } from "@vueuse/sound"
+import correctSfx from "@/assets/audio/correct.mp3"
+import wrongSfx from "@/assets/audio/wrong.mp3"
+
+// sound effects
+const { play: playCorrect } = useSound(correctSfx)
+const { play: playWrong } = useSound(wrongSfx)
+
+/* FUNCTIONS */
 const toggleGameRun = debounce((event) => {
     if (event.code == "Space") {
         start()
@@ -39,6 +38,7 @@ const start = () => {
     router.push("/play")
 }
 
+/* MOUNT & DEMOUNT */
 onMounted(() => {
     window.addEventListener("keydown", toggleGameRun)
 })
@@ -47,6 +47,9 @@ onUnmounted(() => {
     window.removeEventListener("keydown", toggleGameRun)
 })
 
+// const detectDeviceType = () => {
+//     return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 'Mobile': 'Desktop';
+// }
 
 </script>
 
