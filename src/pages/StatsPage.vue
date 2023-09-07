@@ -1,10 +1,22 @@
 <script setup lang="ts">
 const route = useRoute()
+import { useSound } from "@vueuse/sound"
+import numbersJson from "@/assets/data/numbers.json"
+import numbersSfx from "@/assets/data/numbers.mp3"
+const spriteMap = numbersJson.reduce((obj, item) => {
+    obj[item.number] = item.sprite
+    return obj
+}, {})
 
-import { useScoreStore } from "@/store/scoreStore"
-const scoreStore = useScoreStore()
-const { reset } = scoreStore
-const { total, correct, missed } = storeToRefs(scoreStore)
+const answer = ref("")
+const playState = ref(false)
+const { play } = useSound(numbersSfx, {
+    sprite: spriteMap,
+    interrupt: false,
+	onend: () => {
+		playState.value = false
+	},
+})
 
 useHead({
   title: route.meta.title,
@@ -19,16 +31,123 @@ useHead({
     },
   ],
 })
+
+// https://stackoverflow.com/questions/22125865/how-to-wait-until-a-predicate-condition-becomes-true-in-javascript/72350987#72350987
+const playSounds = async (soundIds: Array<String>) => {
+	for (let id of soundIds) {
+		playState.value = true
+		play({id: id})
+		await until(() => { return playState.value == false })
+	}
+}
+
+const numbers = {
+	"0": "ling4",
+	"1": "jat1",
+	"2": "ji6",
+	"3": "saam1",
+	"4": "sei3",
+	"5": "ng5",
+	"6": "luk6",
+	"7": "cat1",
+	"8": "baat3",
+	"9": "gau2",
+	"10": "sap6",
+	"100": "baak3",
+	"1000": "cin1",
+	"10000": "maan6",
+	"100000000": "jik4",
+}
+
+// applies number patterns from 0 to 9999 with 10,000 and 100,000,000 by splitting the number in section
+const splitNumberRecu = (digits: Array<String>) => {
+	let newDigits = digits
+
+	// if all the elements in digits contains "0" then just return an empty array
+	if (newDigits.every((element) => element == "0")) return []
+
+	let cutDigits = []
+	let newIds = []
+	let pos = digits.length - 1
+	if (digits.length >= 9) { // call splitNumberRecu for numbers above 100,000,000 to apply pattern
+		cutDigits = digits.slice(0, digits.length - 9 + 1)
+		newDigits = digits.slice(digits.length - 9 + 1, digits.length)
+		pos = newDigits.length - 1
+		newIds.push(...splitNumberRecu(cutDigits))
+		newIds.push("100000000") 
+	} else if (digits.length >= 5) { // call splitNumberRecu for numbers above 10,000 to apply pattern
+		cutDigits = digits.slice(0, digits.length - 5 + 1)
+		newDigits = digits.slice(digits.length - 5 + 1, digits.length)
+		pos = newDigits.length - 1
+		newIds.push(...splitNumberRecu(cutDigits))
+		newIds.push("10000")
+	}
+
+	if (pos >= 5) { // if after the cut, digits still exceed more than 4, then shorten it again
+		// this check makes sure if the number is beyond 100,000,000, it will still  check the values at 10,000+
+		newIds.push(...splitNumberRecu(newDigits))
+	} else { // number pattern from 0 to 9999
+		for (let id of newDigits) {
+			if (id == "0") {
+				if (newIds[newIds.length-1] != "0" && pos > 0) newIds.push("0")
+			} else if (pos == 3) {
+				newIds.push(id)
+				newIds.push("1000")
+			} else if (pos == 2) {
+				newIds.push(id)
+				newIds.push("100")
+			} else if (pos == 1) {
+				if (id != "1") newIds.push(id)
+				newIds.push("10")
+			} else {
+				answer.value += id
+				newIds.push(id)
+			}
+			pos -= 1
+		}
+
+		if (newIds.length > 1 && newIds[newIds.length-1] == "0") newIds.pop()
+	}
+
+	return newIds
+}
+
+const splitNumber = (val) => {
+	const digits = val.toString().split("")
+	const newIds = []
+	newIds.push(...splitNumberRecu(digits))
+
+	return newIds
+	
+}
+
+const until = (func) => {
+	const poll = (done) => (func() ? done() : setTimeout(() => poll(done), 10))
+	return new Promise(poll)
+}
+
+const submit = () => {
+	if (typeof(num.value) === "number") {
+		const ids = splitNumber(num.value)
+		answer.value = ids.map((element) => {
+			return numbers[element]
+		}).join(" ")
+		playSounds(ids)
+	}
+}
+
+const num = ref()
+
 </script>
 
 <template>
     <div class="flex flex-col h-screen">
         <PageHeader />
         <div class="max-w-[85rem]">
-            <p>correct: {{ correct }} / {{ total }}</p>
-            <p>missed: {{ missed }} / {{ total }}</p>
-            <button @click="reset">Reset</button>
+            <input v-model.number="num" type="number" placeholder="any number" @keyup.enter="submit"/>
+            <button @click="submit">Listen</button>
         </div>
+		{{ answer }}
         <PageFooter />
     </div>
 </template>

@@ -2,56 +2,76 @@
     {
         "number": "0",
         "hint": "ling4",
-        "sprite": [0, 684]
+        "sprite": [95, 387]
     },
     {
         "number": "1",
         "hint": "jat1",
-        "sprite": [1100, 626]
+        "sprite": [1283, 235]
     },
     {
         "number": "2",
         "hint": "ji6",
-        "sprite": [2179, 707]
+        "sprite": [2353, 336]
     },
     {
         "number": "3",
         "hint": "saam1",
-        "sprite": [3338, 834]
+        "sprite": [3519, 454]
     },
     {
         "number": "4",
         "hint": "sei3",
-        "sprite": [4636, 788]
+        "sprite": [4808, 459]
     },
     {
         "number": "5",
         "hint": "ng5",
-        "sprite": [5992, 603]
+        "sprite": [6113, 325]
     },
     {
         "number": "6",
         "hint": "luk6",
-        "sprite": [7069, 568]
+        "sprite": [7251, 235]
     },
     {
         "number": "7",
         "hint": "cat1",
-        "sprite": [8182, 603]
+        "sprite": [8343, 275]
     },
     {
         "number": "8",
         "hint": "baat3",
-        "sprite": [9295, 637]
+        "sprite": [9498, 230]
     },
     {
         "number": "9",
         "hint": "gau2",
-        "sprite": [10419, 684]
+        "sprite": [10602, 342]
     },
     {
         "number": "10",
         "hint": "sap6",
-        "sprite": [11612, 626]
+        "sprite": [11773, 291]
+    },
+    {
+        "number": "100",
+        "hint": "baak3",
+        "sprite": [12933, 235]
+    },
+    {
+        "number": "1000",
+        "hint": "cin1",
+        "sprite": [14048, 448]
+    },
+    {
+        "number": "10000",
+        "hint": "maan6",
+        "sprite": [15320, 403]
+    },
+    {
+        "number": "100000000",
+        "hint": "jik4",
+        "sprite": [16541, 213]
     }
 ]
