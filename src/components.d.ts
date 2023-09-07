@@ -8,6 +8,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     copy: typeof import('./components/play/NumberInput copy.vue')['default']
+    GenerateAudioNumbers: typeof import('./components/play/GenerateAudioNumbers.vue')['default']
     HelloWorld: typeof import('./components/HelloWorld.vue')['default']
     Number2Input: typeof import('./components/play/Number2Input.vue')['default']
     NumberInput: typeof import('./components/play/NumberInput.vue')['default']
