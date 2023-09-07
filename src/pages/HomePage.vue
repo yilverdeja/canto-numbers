@@ -35,21 +35,39 @@ const toggleGameRun = debounce((event) => {
 }, 100)
 
 const start = () => {
-    router.push("/play")
+    let minVal = 0
+    let maxVal = 10
+    if (category.value == "hard") {
+        minVal = 100
+        maxVal = 1000
+    } else if (category.value == "medium") {
+        maxVal = 100
+    }
+    router.push({path: "/play", query: {min: minVal, max: maxVal}})
+}
+
+const goToPractice = debounce((event) => {
+    if (event.key == "p") {
+        practice()
+    }
+}, 100)
+
+const practice = () => {
+    router.push("/practice")
 }
 
 /* MOUNT & DEMOUNT */
 onMounted(() => {
+    window.addEventListener("keypress", goToPractice)
     window.addEventListener("keydown", toggleGameRun)
 })
 
 onUnmounted(() => {
+    window.removeEventListener("keypress", goToPractice)
     window.removeEventListener("keydown", toggleGameRun)
 })
 
-// const detectDeviceType = () => {
-//     return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 'Mobile': 'Desktop';
-// }
+const category = ref("easy")
 
 </script>
 
@@ -70,6 +88,14 @@ onUnmounted(() => {
                             <button class="my-4 px-8 py-2 bg-slate-100 hover:bg-slate-200 rounded-md" @click="playCorrect">correct</button>
                             <button class="my-4 px-8 py-2 bg-slate-100 hover:bg-slate-200 rounded-md" @click="playWrong">wrong</button>
                         </div>
+                        <div>
+                            <label class="text-xl md:text-2xl font-medium">Category:</label>
+                            <select v-model="category" class="text-xl md:text-2xl font-light rounded-md bg-slate-100 hover:bg-slate-200 border-none px-8 py-2 my-4 mx-4">
+                                <option value="easy">0 to 10</option>
+                                <option value="medium">0 to 100</option>
+                                <option value="hard">100 to 1000</option>
+                            </select>
+                        </div>
                     </div>
 
                     <!-- controls -->
@@ -83,8 +109,9 @@ onUnmounted(() => {
                         </ul>
                     </div>
                 </div>
-                <div class="text-center">
+                <div class="flex flex-col md:flex-row text-center justify-center">
                     <button class="text-xl md:text-2xl font-light my-4 px-8 py-2 bg-slate-100 hover:bg-slate-200 rounded-md" @click="start">start <span class="hidden md:inline-block">(space)</span></button>
+                    <button class="text-xl md:text-2xl font-light md:ml-4 my-4 px-8 py-2 bg-slate-100 hover:bg-slate-200 rounded-md" @click="practice">practice <span class="hidden md:inline-block">(p)</span></button>
                 </div>
             </div>
         </div>

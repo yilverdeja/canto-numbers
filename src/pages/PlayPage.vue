@@ -5,6 +5,9 @@ import { debounce } from "lodash-es"
 const route = useRoute()
 const router = useRouter()
 
+const minVal = ref(0)
+const maxVal = ref(10)
+
 useHead({
   title: route.meta.title,
   meta: [
@@ -20,24 +23,14 @@ useHead({
 })
 
 // data & sprits
-import numbersJson from "@/assets/data/numbers.json"
 const currSprite = ref("")
-const spriteMap = numbersJson.reduce((obj, item) => {
-    obj[item.number] = item.sprite
-    return obj
-}, {})
 
 // sound
 import { useSound } from "@vueuse/sound"
-import numbersSfx from "@/assets/data/numbers.mp3"
 import correctSfx from "@/assets/audio/correct.mp3"
 import wrongSfx from "@/assets/audio/wrong.mp3"
 
 // sound effects
-const { play } = useSound(numbersSfx, {
-    sprite: spriteMap,
-    interrupt: false
-})
 const { play: playCorrect } = useSound(correctSfx)
 const { play: playWrong } = useSound(wrongSfx)
 
@@ -56,9 +49,8 @@ const answer = ref("?")
 
 /* GAME FUNCTIONS */
 
-const getRandomSprite = () => {
-    const spriteKeys = Object.keys(spriteMap)
-    return spriteKeys[Math.floor(Math.random() * spriteKeys.length)]
+const getRandomNumber = () => {
+    return Math.floor(Math.random() * (maxVal.value - minVal.value + 1)) + minVal.value
 }
 
 const checkGuess = (guessNumber: string) => {
@@ -72,11 +64,17 @@ const checkGuess = (guessNumber: string) => {
     showAnswer()
 }
 
+const playNumber = (num: Number) => {
+    if (typeof(num) === "number") {
+        childRef.value.generateAudioNumbers(num)
+	}
+}
+
 const makeGuess = (guessNumber: string) => {
     checkGuess(guessNumber)
-    currSprite.value = getRandomSprite()
+    currSprite.value = getRandomNumber()
     setTimeout(() => {
-        play({id: currSprite.value})
+        playNumber(currSprite.value)
     }, 200)
     showHint.value = false
 
@@ -90,7 +88,7 @@ const toggleGameRun = debounce((event) => {
 }, 100)
 
 const repeatAudio = () => {
-    play({id: currSprite.value})
+    playNumber(currSprite.value)
 }
 
 const handleShortcuts = debounce((event) => {
@@ -102,9 +100,9 @@ const handleShortcuts = debounce((event) => {
 }, 100)
 
 const start = () => {
-    currSprite.value = getRandomSprite()
+    currSprite.value = getRandomNumber()
     setTimeout(() => {
-        play({id: currSprite.value})
+        playNumber(currSprite.value)
         focusInput()
     }, 200)
 }
@@ -120,12 +118,7 @@ const pause = () => {
 }
 
 const hint = () => {
-    const result = numbersJson.find(obj => obj.number == currSprite.value)
-    if (result) {
-        return result.hint
-    } else {
-        return "no hint"
-    }
+    return childRef.value.getRomanization()
 }
 
 const submit = () => {
@@ -143,6 +136,16 @@ const showAnswer = () => {
 }
 
 /* MOUNT & DEMOUNT */
+const query = ref(route.query)
+onBeforeMount(() => {
+    if ("min" in query.value && Number(query.value.min)) {
+        minVal.value = Number(query.value.min)
+    }
+    if ("max" in query.value && Number(query.value.max)) {
+        maxVal.value = Number(query.value.max)
+    }
+})
+
 onMounted(() => {
     window.addEventListener("keypress", handleShortcuts)
     window.addEventListener("keydown", toggleGameRun)
@@ -156,6 +159,7 @@ onUnmounted(() => {
     window.removeEventListener("click", focusInput)
 })
 
+const childRef = ref(null)
 
 </script>
 
@@ -177,6 +181,7 @@ onUnmounted(() => {
                 </div>
                 <div class="text-center">
                     <input ref="guessInput" v-model.number="guessNumber" class="text-5xl sm:text-8xl text-center w-full [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none caret-transparent" type="number" placeholder="guess" autofocus @keyup.enter="submit"/>
+                    <GenerateAudioNumbers ref="childRef"/>
                 </div>
                 <div class="grid grid-cols-3 gap-3 w-full py-4">
                     <button class="text-xl md:text-2xl font-light text-center py-4 bg-slate-100 hover:bg-slate-200 rounded-md" @click="submit">submit <span class="hidden md:inline-block">(enter)</span></button>

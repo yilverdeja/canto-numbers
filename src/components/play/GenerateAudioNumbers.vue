@@ -23,15 +23,6 @@ const { play } = useSound(numbersSfx, {
 	},
 })
 
-// https://stackoverflow.com/questions/22125865/how-to-wait-until-a-predicate-condition-becomes-true-in-javascript/72350987#72350987
-const playSounds = async (soundIds: Array<String>) => {
-	for (let id of soundIds) {
-		playState.value = true
-		play({id: id})
-		await until(() => { return playState.value == false })
-	}
-}
-
 // applies number patterns from 0 to 9999 with 10,000 and 100,000,000 by splitting the number in section
 const splitNumberRecu = (digits: Array<String>) => {
 	let newDigits = digits
@@ -97,20 +88,37 @@ const splitNumber = (val) => {
 	
 }
 
+// https://stackoverflow.com/questions/22125865/how-to-wait-until-a-predicate-condition-becomes-true-in-javascript/72350987#72350987
+const playSounds = async (soundIds: Array<String>) => {
+	for (let id of soundIds) {
+		playState.value = true
+		play({id: id})
+		await until(() => { return playState.value == false })
+	}
+}
+
 const until = (func) => {
 	const poll = (done) => (func() ? done() : setTimeout(() => poll(done), 10))
 	return new Promise(poll)
 }
 
 const generateAudioNumbers = (num) => {
-    const ids = splitNumber(num)
-    answer.value = ids.map((element) => {
-        return numbers[element]
-    }).join(" ")
-    playSounds(ids)
+	if (num < 0 || num > 999999999999) {
+		answer.value = "sorry, value must be between 0 and 999999999999"
+	} else {
+		const ids = splitNumber(num)
+		answer.value = ids.map((element) => {
+			return numbers[element]
+		}).join(" ")
+		playSounds(ids)
+	}
 }
 
-defineExpose({generateAudioNumbers})
+const getRomanization = () => {
+	return answer.value
+}
+
+defineExpose({generateAudioNumbers, getRomanization})
 
 defineProps({
     show: {

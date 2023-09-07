@@ -11,9 +11,6 @@ const routes = [
     meta: {
       title: 'Canto Numbers'
     }
-    // redirect: to => {
-    //   return "play"
-    // }
   },
   {
     path: '/play',
