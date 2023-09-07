@@ -6,7 +6,7 @@
         <nav class="relative max-w-[85rem] w-full mx-auto px-8 flex items-center justify-between">
             <!-- brand + collapsed nav -->
             <div class="flex items-center justify-between">
-                <div class="font-medium text-2xl">sik1teng1</div>
+                <div class="font-medium text-2xl cursor-pointer" @click="$router.push('/')">CantoNumbers</div>
             </div>
 
             <!-- nav -->
