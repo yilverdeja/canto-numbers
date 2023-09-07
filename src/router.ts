@@ -1,13 +1,19 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import HomePage from '@/pages/HomePage.vue'
 import PlayPage from '@/pages/PlayPage.vue'
 import StatsPage from '@/pages/StatsPage.vue'
 
 const routes = [
   {
     path: '/',
-    redirect: to => {
-      return "play"
+    name: "home",
+    component: HomePage,
+    meta: {
+      title: 'Canto Numbers'
     }
+    // redirect: to => {
+    //   return "play"
+    // }
   },
   {
     path: '/play',

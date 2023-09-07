@@ -6,8 +6,6 @@ import { useSound } from "@vueuse/sound"
 import numbersSfx from "@/assets/data/numbers.mp3"
 import correctSfx from "@/assets/audio/correct.mp3"
 import wrongSfx from "@/assets/audio/wrong.mp3"
-import audiowaveImg from "@/assets/img/audio_wave.png"
-import playImg from "@/assets/img/play.png"
 const currSprite = ref("")
 import { debounce } from "lodash-es"
 
@@ -17,7 +15,8 @@ const { incrementCorrect, incrementMissed, reset } = scoreStore
 const { total, correct, missed } = storeToRefs(scoreStore)
 
 const showHint = ref(false)
-const notCompatible = ref(false)
+
+console.log(route.name)
 
 const detectDeviceType = () => {
     return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 'Mobile': 'Desktop';
@@ -158,9 +157,6 @@ const showAnswer = () => {
 }
 
 onMounted(() => {
-    if (detectDeviceType() == "Mobile") {
-        notCompatible.value = true
-    }
     window.addEventListener("keypress", handleShortcuts)
     window.addEventListener("keydown", toggleGameRun)
     if (gameArea.value) {
