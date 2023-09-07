@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomePage from '@/pages/HomePage.vue'
 import PlayPage from '@/pages/PlayPage.vue'
-import StatsPage from '@/pages/StatsPage.vue'
+import PracticePage from '@/pages/PracticePage.vue'
 
 const routes = [
   {
@@ -24,10 +24,10 @@ const routes = [
     },
   },
   {
-    path: '/stats',
-    component: StatsPage,
+    path: '/practice',
+    component: PracticePage,
     meta: {
-      title: 'Stats Canto Numbers',
+      title: 'Practice Canto Numbers',
     },
   },
 ]

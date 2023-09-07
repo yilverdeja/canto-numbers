@@ -1,10 +1,15 @@
 <script setup lang="ts">
-const route = useRoute()
 import { useSound } from "@vueuse/sound"
 import numbersJson from "@/assets/data/numbers.json"
 import numbersSfx from "@/assets/data/numbers.mp3"
+
 const spriteMap = numbersJson.reduce((obj, item) => {
     obj[item.number] = item.sprite
+    return obj
+}, {})
+
+const numbers = numbersJson.reduce((obj, item) => {
+    obj[item.number] = item.hint
     return obj
 }, {})
 
@@ -18,20 +23,6 @@ const { play } = useSound(numbersSfx, {
 	},
 })
 
-useHead({
-  title: route.meta.title,
-  meta: [
-    {
-      property: 'og:title',
-      content: route.meta.title,
-    },
-    {
-      name: 'twitter:title',
-      content: route.meta.title,
-    },
-  ],
-})
-
 // https://stackoverflow.com/questions/22125865/how-to-wait-until-a-predicate-condition-becomes-true-in-javascript/72350987#72350987
 const playSounds = async (soundIds: Array<String>) => {
 	for (let id of soundIds) {
@@ -39,24 +30,6 @@ const playSounds = async (soundIds: Array<String>) => {
 		play({id: id})
 		await until(() => { return playState.value == false })
 	}
-}
-
-const numbers = {
-	"0": "ling4",
-	"1": "jat1",
-	"2": "ji6",
-	"3": "saam1",
-	"4": "sei3",
-	"5": "ng5",
-	"6": "luk6",
-	"7": "cat1",
-	"8": "baat3",
-	"9": "gau2",
-	"10": "sap6",
-	"100": "baak3",
-	"1000": "cin1",
-	"10000": "maan6",
-	"100000000": "jik4",
 }
 
 // applies number patterns from 0 to 9999 with 10,000 and 100,000,000 by splitting the number in section
@@ -100,7 +73,6 @@ const splitNumberRecu = (digits: Array<String>) => {
 				if (id != "1") newIds.push(id)
 				newIds.push("10")
 			} else {
-				answer.value += id
 				newIds.push(id)
 			}
 			pos -= 1
@@ -114,8 +86,12 @@ const splitNumberRecu = (digits: Array<String>) => {
 
 const splitNumber = (val) => {
 	const digits = val.toString().split("")
-	const newIds = []
-	newIds.push(...splitNumberRecu(digits))
+    const newIds = []
+    if (digits.length == 1) {
+        newIds.push(...digits)
+    } else {
+        newIds.push(...splitNumberRecu(digits))
+    }
 
 	return newIds
 	
@@ -126,28 +102,25 @@ const until = (func) => {
 	return new Promise(poll)
 }
 
-const submit = () => {
-	if (typeof(num.value) === "number") {
-		const ids = splitNumber(num.value)
-		answer.value = ids.map((element) => {
-			return numbers[element]
-		}).join(" ")
-		playSounds(ids)
-	}
+const generateAudioNumbers = (num) => {
+    const ids = splitNumber(num)
+    answer.value = ids.map((element) => {
+        return numbers[element]
+    }).join(" ")
+    playSounds(ids)
 }
 
-const num = ref()
+defineExpose({generateAudioNumbers})
+
+defineProps({
+    show: {
+        type: Boolean,
+        default: false
+    }
+})
 
 </script>
 
 <template>
-    <div class="flex flex-col h-screen">
-        <PageHeader />
-        <div class="max-w-[85rem]">
-            <input v-model.number="num" type="number" placeholder="any number" @keyup.enter="submit"/>
-            <button @click="submit">Listen</button>
-        </div>
-		{{ answer }}
-        <PageFooter />
-    </div>
+    <div v-if="show">{{answer}}</div>
 </template>
