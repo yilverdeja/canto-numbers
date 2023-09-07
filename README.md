@@ -21,6 +21,7 @@ Canto Numbers currently offers the following features:
 
 Future implementations:
 
+- [ ] Add unit tests.
 - [ ] Expanding the range of numbers.
 - [ ] Adding a stats dashboard to see progress.
 - [ ] Incorporating more audio variations for each number.
