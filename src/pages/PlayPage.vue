@@ -45,8 +45,12 @@ import { useSettingsStore } from '@/store/settingsStore';
 const settingsStore = useSettingsStore()
 const { hintType, showHint: forceShowHint } = storeToRefs(settingsStore)
 
+watch([hintType, forceShowHint], ([newHintType, newForceShowHint]) => {
+    showHint.value = newForceShowHint
+})
+
 // variables
-const showHint = ref(forceShowHint)
+const showHint = ref(forceShowHint.value)
 const guessNumber = ref("")
 const guessInput = ref(null)
 const answerVal = ref("answer")
@@ -82,14 +86,14 @@ const makeGuess = (guessNumber: string) => {
         playNumber(currSprite.value)
     }, 200)
 
-    if (!forceShowHint) showHint.value = false
+    if (!forceShowHint.value) showHint.value = false
 
 }
 
 const toggleGameRun = debounce((event) => {
     if (event.code == "Space") {
         pause()
-        if (!forceShowHint) showHint.value = false
+        if (!forceShowHint.value) showHint.value = false
     }
 }, 100)
 
@@ -102,6 +106,8 @@ const handleShortcuts = debounce((event) => {
         repeatAudio()
     } else if (event.key == "h") {
         showHint.value = true
+    } else if (event.key == "s") {
+        modalOpen.value = true
     }
 }, 100)
 
@@ -124,7 +130,7 @@ const pause = () => {
 }
 
 const hint = () => {
-    return childRef.value ? childRef.value.getRomanization() : ""
+    return childRef.value ? childRef.value.getRomanization(hintType.value) : ""
 }
 
 const submit = () => {
@@ -166,6 +172,16 @@ onUnmounted(() => {
 })
 
 const childRef = ref(null)
+const modalOpen = ref(false)
+
+const closeModal = () => {
+    if (modalOpen.value) {
+        modalOpen.value = false 
+        setTimeout(() => {
+            playNumber(currSprite.value)
+        }, 200)
+    }
+}
 
 </script>
 
@@ -187,7 +203,7 @@ const childRef = ref(null)
                 </div>
                 <div class="text-center">
                     <input ref="guessInput" v-model.number="guessNumber" class="text-5xl sm:text-8xl text-center w-full [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none caret-transparent" type="number" placeholder="guess" autofocus @keyup.enter="submit"/>
-                    <GenerateAudioNumbers ref="childRef" :hint-type="hintType"/>
+                    <GenerateAudioNumbers ref="childRef"/>
                 </div>
                 <div class="grid grid-cols-3 gap-3 w-full py-4">
                     <button class="text-xl md:text-2xl font-light text-center py-4 bg-slate-100 hover:bg-slate-200 rounded-md" @click="submit">submit <span class="hidden md:inline-block">(enter)</span></button>
@@ -201,6 +217,7 @@ const childRef = ref(null)
                 </div>
             </div>
         </div>
+        <SettingsModal :is-open="modalOpen" @close="closeModal"/>
         <PageFooter />
     </div>
 </template>

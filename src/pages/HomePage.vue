@@ -27,12 +27,6 @@ import wrongSfx from "@/assets/audio/wrong.mp3"
 const { play: playCorrect } = useSound(correctSfx)
 const { play: playWrong } = useSound(wrongSfx)
 
-// settings store
-import { useSettingsStore } from '@/store/settingsStore';
-const settingsStore = useSettingsStore()
-const { updateHintType, toggleShowHint } = settingsStore
-const { hintType, showHint } = storeToRefs(settingsStore)
-
 /* FUNCTIONS */
 const toggleGameRun = debounce((event) => {
     if (event.code == "Space") {
@@ -52,9 +46,11 @@ const start = () => {
     router.push({path: "/play", query: {min: minVal, max: maxVal}})
 }
 
-const goToPractice = debounce((event) => {
+const handleKeyPresses = debounce((event) => {
     if (event.key == "p") {
         practice()
+    } else if (event.key == "s") {
+        modalOpen.value = true
     }
 }, 100)
 
@@ -64,30 +60,18 @@ const practice = () => {
 
 /* MOUNT & DEMOUNT */
 onMounted(() => {
-    window.addEventListener("keypress", goToPractice)
+    window.addEventListener("keypress", handleKeyPresses)
     window.addEventListener("keydown", toggleGameRun)
 })
 
 onUnmounted(() => {
-    window.removeEventListener("keypress", goToPractice)
+    window.removeEventListener("keypress", handleKeyPresses)
     window.removeEventListener("keydown", toggleGameRun)
 })
 
 const category = ref("easy")
 
-// https://www.tutorialspoint.com/how-to-fix-property-not-existing-on-eventtarget-in-typescript
-const changeHintType = (event: Event) => {
-    if (event.target) {
-        const eventValue = (event.target as HTMLInputElement).value
-        updateHintType(eventValue)
-    }
-}
-
-const changeHintShow = (event: Event) => {
-    if (event.target) {
-        toggleShowHint()
-    }
-}
+const modalOpen = ref(false)
 
 </script>
 
@@ -112,24 +96,17 @@ const changeHintShow = (event: Event) => {
 
                     <!-- controls -->
                     <div class="text-xl md:text-2xl font-light">
-                        <!-- <div>
-                            <label class="text-xl md:text-2xl font-medium">Hint:</label>
-                            <select :value="hintType" class="text-xl md:text-2xl font-light rounded-md bg-slate-100 hover:bg-slate-200 border-none px-8 py-2 my-4 mx-4 appearance-none" @change="changeHintType">
-                                <option value="jyutping">Jyutping</option>
-                                <option value="yale">Yale</option>
-                                <option value="traditional">Chinese</option>
-                            </select>
-
-                            <label class="text-xl md:text-2xl font-medium">Show: </label>
-                            <input class="p-2 rounded-md" type="checkbox" :checked="showHint" @change="changeHintShow" />
-                        </div> -->
+                        <div>
+                            <p class="py-2"><span class="font-medium"><i class="text-lg i-mdi-gear justify-center items-center md:ml-2"></i> Settings: </span>Update global site settings</p>
+                        </div>
                         <div class="hidden md:block ">
                             <p class="py-2"><span class="font-medium">Controls: </span>Use the following keyboard controls for ease of use</p>
                             <ul class="list-disc list-inside">
                                 <li>Space: Play / Pause Game</li>
                                 <li>Enter: Submit Guess</li>
                                 <li>R: Replay Audio</li>
-                                <li>H: Hint in Jyutping</li>
+                                <li>H: Show Hint</li>
+                                <li>S: Open Settings</li>
                             </ul>
                         </div>
                     </div>
@@ -149,6 +126,7 @@ const changeHintShow = (event: Event) => {
                 </div>
             </div>
         </div>
+        <SettingsModal :is-open="modalOpen" @close="modalOpen = false"/>
         <PageFooter />
     </div>
 </template>

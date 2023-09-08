@@ -23,7 +23,8 @@ const numbersTraditional = numbersJson.reduce((obj, item) => {
     return obj
 }, {})
 
-const answer = ref("")
+const answer = ref({})
+const answerError = ref("")
 const playState = ref(false)
 const { play } = useSound(numbersSfx, {
     sprite: spriteMap,
@@ -114,41 +115,50 @@ const until = (func) => {
 
 const generateAudioNumbers = (num) => {
 	if (num < 0 || num > 999999999999) {
-		answer.value = "sorry, value must be between 0 and 999999999999"
+		answerError.value = "sorry, value must be between 0 and 999999999999"
 	} else {
 		const ids = splitNumber(num)
-		answer.value = ids.map((element) => {
-			if (props.hintType == "traditional") {
-				return numbersTraditional[element]
-			} else if (props.hintType == "yale") {
-				return numbersYale[element]
-			} else {
-				return numbersJyutping[element]
-			}
-		}).join(" ")
+		answer.value = {
+			traditional: ids.map((element) => {return numbersTraditional[element]}),
+			jyutping: ids.map((element) => {return numbersJyutping[element]}),
+			yale: ids.map((element) => {return numbersYale[element]})
+		}
+		answerError.value = ""
 		playSounds(ids)
 	}
 }
 
-const getRomanization = () => {
-	return answer.value
+const getRomanization = (hintType: string) => {
+	if (Object.keys(answer.value).length == 0) return ""
+	if (["jyutping", "yale", "traditional"].includes(hintType)) {
+		return (answer.value)[hintType].join(" ")
+	} else {
+		return ""
+	}
+	
 }
 
 defineExpose({generateAudioNumbers, getRomanization})
 
-const props = defineProps({
-	hintType: {
-		type: String,
-		default: "jyutping"
-	},
-    show: {
+defineProps({
+    showJyutping: {
         type: Boolean,
         default: false
-    }
+    },
+	showYale: {
+        type: Boolean,
+        default: false
+    },
+	showTraditional: {
+        type: Boolean,
+        default: false
+    },
 })
 
 </script>
 
 <template>
-    <div v-if="show">{{answer}}</div>
+    <div v-if="showJyutping">{{ getRomanization("jyutping") }}</div>
+	<div v-if="showYale">{{ getRomanization("yale") }}</div>
+	<div v-if="showTraditional">{{ getRomanization("traditional") }}</div>
 </template>
