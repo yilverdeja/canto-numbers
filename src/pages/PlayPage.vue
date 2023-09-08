@@ -40,8 +40,13 @@ const scoreStore = useScoreStore()
 const { incrementCorrect, incrementMissed, reset } = scoreStore
 const { total, correct, missed } = storeToRefs(scoreStore)
 
+// settings store
+import { useSettingsStore } from '@/store/settingsStore';
+const settingsStore = useSettingsStore()
+const { hintType, showHint: forceShowHint } = storeToRefs(settingsStore)
+
 // variables
-const showHint = ref(false)
+const showHint = ref(forceShowHint)
 const guessNumber = ref("")
 const guessInput = ref(null)
 const answerVal = ref("answer")
@@ -76,14 +81,15 @@ const makeGuess = (guessNumber: string) => {
     setTimeout(() => {
         playNumber(currSprite.value)
     }, 200)
-    showHint.value = false
+
+    if (!forceShowHint) showHint.value = false
 
 }
 
 const toggleGameRun = debounce((event) => {
     if (event.code == "Space") {
         pause()
-        showHint.value = false
+        if (!forceShowHint) showHint.value = false
     }
 }, 100)
 
@@ -118,7 +124,7 @@ const pause = () => {
 }
 
 const hint = () => {
-    return childRef.value.getRomanization()
+    return childRef.value ? childRef.value.getRomanization() : ""
 }
 
 const submit = () => {
@@ -181,7 +187,7 @@ const childRef = ref(null)
                 </div>
                 <div class="text-center">
                     <input ref="guessInput" v-model.number="guessNumber" class="text-5xl sm:text-8xl text-center w-full [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none caret-transparent" type="number" placeholder="guess" autofocus @keyup.enter="submit"/>
-                    <GenerateAudioNumbers ref="childRef"/>
+                    <GenerateAudioNumbers ref="childRef" :hint-type="hintType"/>
                 </div>
                 <div class="grid grid-cols-3 gap-3 w-full py-4">
                     <button class="text-xl md:text-2xl font-light text-center py-4 bg-slate-100 hover:bg-slate-200 rounded-md" @click="submit">submit <span class="hidden md:inline-block">(enter)</span></button>

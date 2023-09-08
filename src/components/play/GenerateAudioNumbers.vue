@@ -8,8 +8,18 @@ const spriteMap = numbersJson.reduce((obj, item) => {
     return obj
 }, {})
 
-const numbers = numbersJson.reduce((obj, item) => {
-    obj[item.number] = item.hint
+const numbersJyutping = numbersJson.reduce((obj, item) => {
+    obj[item.number] = item.jyutping
+    return obj
+}, {})
+
+const numbersYale = numbersJson.reduce((obj, item) => {
+    obj[item.number] = item.yale
+    return obj
+}, {})
+
+const numbersTraditional = numbersJson.reduce((obj, item) => {
+    obj[item.number] = item.traditional
     return obj
 }, {})
 
@@ -108,7 +118,13 @@ const generateAudioNumbers = (num) => {
 	} else {
 		const ids = splitNumber(num)
 		answer.value = ids.map((element) => {
-			return numbers[element]
+			if (props.hintType == "traditional") {
+				return numbersTraditional[element]
+			} else if (props.hintType == "yale") {
+				return numbersYale[element]
+			} else {
+				return numbersJyutping[element]
+			}
 		}).join(" ")
 		playSounds(ids)
 	}
@@ -120,7 +136,11 @@ const getRomanization = () => {
 
 defineExpose({generateAudioNumbers, getRomanization})
 
-defineProps({
+const props = defineProps({
+	hintType: {
+		type: String,
+		default: "jyutping"
+	},
     show: {
         type: Boolean,
         default: false
