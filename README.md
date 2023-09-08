@@ -26,7 +26,11 @@ Future implementations:
 - [x] Expanding the range of numbers.
 - [ ] Adding a stats dashboard to see progress.
 - [ ] Incorporating more audio variations for each number.
-- [ ] Add different number categories like single digits, whole numbers, decimals, time, and more.
+- [ ] Add different number categories
+  - [x] whole numbers
+  - [ ] time
+  - [ ] money (decimals)
+  - [ ] math
 - [ ] Create game settings for more personalized approach
 
 ## Contribution
