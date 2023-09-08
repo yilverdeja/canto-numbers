@@ -40,8 +40,17 @@ const scoreStore = useScoreStore()
 const { incrementCorrect, incrementMissed, reset } = scoreStore
 const { total, correct, missed } = storeToRefs(scoreStore)
 
+// settings store
+import { useSettingsStore } from '@/store/settingsStore';
+const settingsStore = useSettingsStore()
+const { hintType, showHint: forceShowHint } = storeToRefs(settingsStore)
+
+watch([hintType, forceShowHint], ([newHintType, newForceShowHint]) => {
+    showHint.value = newForceShowHint
+})
+
 // variables
-const showHint = ref(false)
+const showHint = ref(forceShowHint.value)
 const guessNumber = ref("")
 const guessInput = ref(null)
 const answerVal = ref("answer")
@@ -76,14 +85,15 @@ const makeGuess = (guessNumber: string) => {
     setTimeout(() => {
         playNumber(currSprite.value)
     }, 200)
-    showHint.value = false
+
+    if (!forceShowHint.value) showHint.value = false
 
 }
 
 const toggleGameRun = debounce((event) => {
     if (event.code == "Space") {
         pause()
-        showHint.value = false
+        if (!forceShowHint.value) showHint.value = false
     }
 }, 100)
 
@@ -96,6 +106,8 @@ const handleShortcuts = debounce((event) => {
         repeatAudio()
     } else if (event.key == "h") {
         showHint.value = true
+    } else if (event.key == "s") {
+        modalOpen.value = true
     }
 }, 100)
 
@@ -118,7 +130,7 @@ const pause = () => {
 }
 
 const hint = () => {
-    return childRef.value.getRomanization()
+    return childRef.value ? childRef.value.getRomanization(hintType.value) : ""
 }
 
 const submit = () => {
@@ -160,6 +172,16 @@ onUnmounted(() => {
 })
 
 const childRef = ref(null)
+const modalOpen = ref(false)
+
+const closeModal = () => {
+    if (modalOpen.value) {
+        modalOpen.value = false 
+        setTimeout(() => {
+            playNumber(currSprite.value)
+        }, 200)
+    }
+}
 
 </script>
 
@@ -195,6 +217,7 @@ const childRef = ref(null)
                 </div>
             </div>
         </div>
+        <SettingsModal :is-open="modalOpen" @close="closeModal"/>
         <PageFooter />
     </div>
 </template>

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+const modalOpen = ref(false)
+
 </script>
 
 <template>
@@ -10,6 +12,9 @@
             </div>
 
             <!-- nav -->
+            <a class="flex cursor-pointer" @click="modalOpen = true">
+                <p class="flex text-xl justify-center items-center"><span class="hidden md:inline-block">settings </span><i class="text-2xl i-mdi-gear justify-center items-center md:ml-2"></i></p>
+            </a>
             <!-- <div class="basis-full grow">
                 <div class="flex flex-row pb-0 items-center justify-end gap-y-0 gap-x-7 my-0 pl-7 static w-auto top-6 duration-500 ease-in">
                     <a class="font-medium sm:py-6 hover:underline decoration-2 cursor-pointer" @click="$router.push('/')">home</a>
@@ -18,4 +23,5 @@
             </div> -->
         </nav>
     </header>
+    <SettingsModal :is-open="modalOpen" @close="modalOpen = false"/>
 </template>
