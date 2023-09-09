@@ -2,9 +2,6 @@
 import { storeToRefs } from "pinia";
 import { debounce } from "lodash-es"
 const route = useRoute()
-const router = useRouter()
-const num = ref()
-const childRef = ref(null)
 
 // stats store
 import { useStatsStore } from "@/store/statsStore"
