@@ -58,6 +58,10 @@ const practice = () => {
     router.push("/practice")
 }
 
+const stats = () => {
+    router.push("/stats")
+}
+
 /* MOUNT & DEMOUNT */
 onMounted(() => {
     window.addEventListener("keypress", handleKeyPresses)
@@ -122,7 +126,10 @@ const modalOpen = ref(false)
                 </div>
                 <div class="flex flex-col md:flex-row text-center justify-center">
                     <button class="text-xl md:text-2xl font-light my-4 px-8 py-2 bg-slate-100 hover:bg-slate-200 rounded-md" @click="start">start <span class="hidden md:inline-block">(space)</span></button>
-                    <button class="text-xl md:text-2xl font-light md:ml-4 my-4 px-8 py-2 bg-slate-100 hover:bg-slate-200 rounded-md" @click="practice">practice <span class="hidden md:inline-block">(p)</span></button>
+                    <div class="flex flex-row justify-between">
+                        <button class="text-xl md:text-2xl font-light md:ml-4 my-4 px-8 py-2 bg-slate-100 hover:bg-slate-200 rounded-md" @click="practice">practice <span class="hidden md:inline-block">(p)</span></button>
+                        <button class="text-xl md:text-2xl font-light md:ml-4 my-4 px-8 py-2 bg-slate-100 hover:bg-slate-200 rounded-md" @click="stats">stats</button>
+                    </div>
                 </div>
             </div>
         </div>
