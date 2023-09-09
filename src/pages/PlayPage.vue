@@ -37,8 +37,13 @@ const { play: playWrong } = useSound(wrongSfx)
 // score store
 import { useScoreStore } from "@/store/scoreStore"
 const scoreStore = useScoreStore()
-const { incrementCorrect, incrementMissed, reset } = scoreStore
+const { addToCorrect, addToMissed, resetScore } = scoreStore
 const { total, correct, missed } = storeToRefs(scoreStore)
+
+// stats store
+import { useStatsStore } from "@/store/statsStore"
+const statsStore = useStatsStore()
+const { addSession } = statsStore
 
 // settings store
 import { useSettingsStore } from '@/store/settingsStore';
@@ -65,10 +70,10 @@ const getRandomNumber = () => {
 const checkGuess = (guessNumber: string) => {
     if (guessNumber == currSprite.value) {
         playCorrect()
-        incrementCorrect()
+        addToCorrect(currSprite.value)
     } else {
         playWrong()
-        incrementMissed()
+        addToMissed(currSprite.value)
     }
     showAnswer()
 }
@@ -111,9 +116,11 @@ const handleShortcuts = debounce((event) => {
     }
 }, 100)
 
+const game_start_at = ref<Date>()
 const start = () => {
     currSprite.value = getRandomNumber()
     setTimeout(() => {
+        game_start_at.value = new Date()
         playNumber(currSprite.value)
         focusInput()
     }, 200)
@@ -126,6 +133,8 @@ const focusInput = () => {
 }
 
 const pause = () => {
+    addSession(correct, missed, total, "integer", {"min": minVal.value, "max": maxVal.value}, game_start_at, new Date())
+    resetScore()
     router.push("/")
 }
 
@@ -211,9 +220,9 @@ const closeModal = () => {
                     <button class="text-xl md:text-2xl font-light text-center py-4 bg-slate-100 hover:bg-slate-200 rounded-md" @click="pause">pause <span class="hidden md:inline-block">(space)</span></button>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-3 text-xl md:text-2xl font-light text-center items-center border-t-4 pt-8">
-                    <p class="py-1 md:py-0"><span class="font-medium">correct:</span> {{ correct }} / {{ total }}</p>
-                    <p class="py-1 md:py-0"><span class="font-medium">missed:</span> {{ missed }} / {{ total }}</p>
-                    <button class="bg-slate-100 hover:bg-slate-200 rounded-md py-2 md:py-4 mt-1 md:mt-0" @click="reset">reset stats</button>
+                    <p class="py-1 md:py-0"><span class="font-medium">correct:</span> {{ correct }}</p>
+                    <p class="py-1 md:py-0"><span class="font-medium">missed:</span> {{ missed }}</p>
+                    <p class="py-1 md:py-0"><span class="font-medium">total:</span> {{ total }}</p>
                 </div>
             </div>
         </div>

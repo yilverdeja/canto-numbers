@@ -1,48 +1,25 @@
 import { defineStore } from 'pinia'
 
-const getSavedTotal = () => {
-    const value = localStorage.getItem("total")
-    return value ? parseInt(value) : 0
-}
-
-const getSavedCorrect = () => {
-    const value = localStorage.getItem("correct")
-    return value ? parseInt(value) : 0
-}
-
-const getSavedMissed = () => {
-    const value = localStorage.getItem("missed")
-    return value ? parseInt(value) : 0
-}
-
-
 export const useScoreStore = defineStore('score', {
     state: () => ({
-        total: getSavedTotal(),
-        correct: getSavedCorrect(),
-        missed: getSavedMissed()
+        total: 0,
+        correct: [],
+        missed: []
     }),
 
     actions: {
-        incrementCorrect() {
-            this.correct += 1
-            this.total += 1
-            localStorage.setItem("total", this.total.toString())
-            localStorage.setItem("correct", this.correct.toString())
-        },
-        incrementMissed() {
-            this.missed += 1
-            this.total += 1
-            localStorage.setItem("total", this.total.toString())
-            localStorage.setItem("missed", this.missed.toString())
-        },
-        reset() {
+        resetScore() {
             this.total = 0
-            this.correct = 0
-            this.missed = 0
-            localStorage.setItem("total", this.total.toString())
-            localStorage.setItem("correct", this.correct.toString())
-            localStorage.setItem("missed", this.missed.toString())
-        }
+            this.correct = []
+            this.missed = []
+        },
+        addToCorrect(val: string) {
+            this.correct.push(val)
+            this.total += 1
+        },
+        addToMissed(val: string) {
+            this.missed.push(val)
+            this.total += 1
+        },
     },
 })
