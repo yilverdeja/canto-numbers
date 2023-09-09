@@ -133,7 +133,7 @@ const focusInput = () => {
 }
 
 const pause = () => {
-    addSession(correct, missed, total, "integer", {"min": minVal.value, "max": maxVal.value}, game_start_at, new Date())
+    addSession(correct.value, missed.value, total.value, "integer", {"min": minVal.value, "max": maxVal.value}, game_start_at, new Date())
     resetScore()
     router.push("/")
 }
