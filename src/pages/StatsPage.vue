@@ -62,7 +62,7 @@ const closeModal = () => {
             </div>
             <p class="py-2 text-xl md:text-2xl font-light">See all sessions below</p>
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                <div v-for="session of sessions" :key="session" class="rounded-md shadow-xl bg-white p-2">
+                <div v-for="session of sessions" :key="session" class="font-light rounded-md shadow-xl bg-white p-2">
                     <p><span class="font-medium">type: </span>{{ session.type }}</p>
                     <div class="flex flex-row">
                         <div v-for="option in Object.keys(session.options)" :key="option" class="pr-1">
