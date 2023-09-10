@@ -46,9 +46,11 @@ const start = () => {
     router.push({path: "/play", query: {min: minVal, max: maxVal}})
 }
 
-const goToPractice = debounce((event) => {
+const handleKeyPresses = debounce((event) => {
     if (event.key == "p") {
         practice()
+    } else if (event.key == "s") {
+        modalOpen.value = true
     }
 }, 100)
 
@@ -56,18 +58,24 @@ const practice = () => {
     router.push("/practice")
 }
 
+const stats = () => {
+    router.push("/stats")
+}
+
 /* MOUNT & DEMOUNT */
 onMounted(() => {
-    window.addEventListener("keypress", goToPractice)
+    window.addEventListener("keypress", handleKeyPresses)
     window.addEventListener("keydown", toggleGameRun)
 })
 
 onUnmounted(() => {
-    window.removeEventListener("keypress", goToPractice)
+    window.removeEventListener("keypress", handleKeyPresses)
     window.removeEventListener("keydown", toggleGameRun)
 })
 
 const category = ref("easy")
+
+const modalOpen = ref(false)
 
 </script>
 
@@ -78,7 +86,7 @@ const category = ref("easy")
             <!-- instructions -->
             <div>
                 <h1 class="text-5xl md:text-6xl py-4">Canto Numbers</h1>
-                <div class="grid md:grid-cols-2 gap-6">
+                <div class="grid md:grid-cols-2 gap-0 md:gap-6">
                     <!-- instructions -->
                     <div class="text-xl md:text-2xl font-light">
                         <p class="py-2"><span class="font-medium">About: </span>Learn to distinguish numbers in Cantonese by listening</p>
@@ -88,33 +96,44 @@ const category = ref("easy")
                             <button class="my-4 px-8 py-2 bg-slate-100 hover:bg-slate-200 rounded-md" @click="playCorrect">correct</button>
                             <button class="my-4 px-8 py-2 bg-slate-100 hover:bg-slate-200 rounded-md" @click="playWrong">wrong</button>
                         </div>
-                        <div>
-                            <label class="text-xl md:text-2xl font-medium">Category:</label>
-                            <select v-model="category" class="text-xl md:text-2xl font-light rounded-md bg-slate-100 hover:bg-slate-200 border-none px-8 py-2 my-4 mx-4">
-                                <option value="easy">0 to 10</option>
-                                <option value="medium">0 to 100</option>
-                                <option value="hard">100 to 1000</option>
-                            </select>
-                        </div>
                     </div>
 
                     <!-- controls -->
-                    <div class="hidden md:block text-xl md:text-2xl font-light">
-                        <p class="py-2"><span class="font-medium">Controls: </span>Use the following keyboard controls for ease of use</p>
-                        <ul class="list-disc list-inside">
-                            <li>Space: Play / Pause Game</li>
-                            <li>Enter: Submit Guess</li>
-                            <li>R: Replay Audio</li>
-                            <li>H: Hint in Jyutping</li>
-                        </ul>
+                    <div class="text-xl md:text-2xl font-light">
+                        <div>
+                            <p class="py-2"><span class="font-medium"><i class="text-lg i-mdi-gear justify-center items-center md:ml-2"></i> Settings: </span>Update global site settings</p>
+                        </div>
+                        <div class="hidden md:block ">
+                            <p class="py-2"><span class="font-medium">Controls: </span>Use the following keyboard controls for ease of use</p>
+                            <ul class="list-disc list-inside">
+                                <li>Space: Play / Pause Game</li>
+                                <li>Enter: Submit Guess</li>
+                                <li>R: Replay Audio</li>
+                                <li>H: Show Hint</li>
+                                <li>S: Open Settings</li>
+                            </ul>
+                        </div>
                     </div>
+                </div>
+                
+                <div>
+                    <label class="text-xl md:text-2xl font-medium">Category:</label>
+                    <select v-model="category" class="text-xl md:text-2xl font-light rounded-md bg-slate-100 hover:bg-slate-200 border-none px-8 py-2 my-4 mx-4 appearance-none">
+                        <option value="easy">0 to 10</option>
+                        <option value="medium">0 to 100</option>
+                        <option value="hard">100 to 1000</option>
+                    </select>
                 </div>
                 <div class="flex flex-col md:flex-row text-center justify-center">
                     <button class="text-xl md:text-2xl font-light my-4 px-8 py-2 bg-slate-100 hover:bg-slate-200 rounded-md" @click="start">start <span class="hidden md:inline-block">(space)</span></button>
-                    <button class="text-xl md:text-2xl font-light md:ml-4 my-4 px-8 py-2 bg-slate-100 hover:bg-slate-200 rounded-md" @click="practice">practice <span class="hidden md:inline-block">(p)</span></button>
+                    <div class="flex flex-row justify-between">
+                        <button class="text-xl md:text-2xl font-light md:ml-4 my-4 px-8 py-2 bg-slate-100 hover:bg-slate-200 rounded-md" @click="practice">practice <span class="hidden md:inline-block">(p)</span></button>
+                        <button class="text-xl md:text-2xl font-light md:ml-4 my-4 px-8 py-2 bg-slate-100 hover:bg-slate-200 rounded-md" @click="stats">stats</button>
+                    </div>
                 </div>
             </div>
         </div>
+        <SettingsModal :is-open="modalOpen" @close="modalOpen = false"/>
         <PageFooter />
     </div>
 </template>

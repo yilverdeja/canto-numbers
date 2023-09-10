@@ -1,77 +1,107 @@
 [
     {
         "number": "0",
-        "hint": "ling4",
+        "jyutping": "ling4",
+        "yale": "lìhng",
+        "traditional": "零",
         "sprite": [95, 387]
     },
     {
         "number": "1",
-        "hint": "jat1",
+        "jyutping": "jat1",
+        "yale": "yāt",
+        "traditional": "一",
         "sprite": [1283, 235]
     },
     {
         "number": "2",
-        "hint": "ji6",
+        "jyutping": "ji6",
+        "yale": "yih",
+        "traditional": "二",
         "sprite": [2353, 336]
     },
     {
         "number": "3",
-        "hint": "saam1",
+        "jyutping": "saam1",
+        "yale": "sāam",
+        "traditional": "三",
         "sprite": [3519, 454]
     },
     {
         "number": "4",
-        "hint": "sei3",
+        "jyutping": "sei3",
+        "yale": "sei",
+        "traditional": "四",
         "sprite": [4808, 459]
     },
     {
         "number": "5",
-        "hint": "ng5",
+        "jyutping": "ng5",
+        "yale": "ńgh",
+        "traditional": "五",
         "sprite": [6113, 325]
     },
     {
         "number": "6",
-        "hint": "luk6",
+        "jyutping": "luk6",
+        "yale": "luhk",
+        "traditional": "六",
         "sprite": [7251, 235]
     },
     {
         "number": "7",
-        "hint": "cat1",
+        "jyutping": "cat1",
+        "yale": "chāt",
+        "traditional": "七",
         "sprite": [8343, 275]
     },
     {
         "number": "8",
-        "hint": "baat3",
+        "jyutping": "baat3",
+        "yale": "baat",
+        "traditional": "八",
         "sprite": [9498, 230]
     },
     {
         "number": "9",
-        "hint": "gau2",
+        "jyutping": "gau2",
+        "yale": "gáu",
+        "traditional": "九",
         "sprite": [10602, 342]
     },
     {
         "number": "10",
-        "hint": "sap6",
+        "jyutping": "sap6",
+        "yale": "sahp",
+        "traditional": "十",
         "sprite": [11773, 291]
     },
     {
         "number": "100",
-        "hint": "baak3",
+        "jyutping": "baak3",
+        "yale": "baak",
+        "traditional": "百",
         "sprite": [12933, 235]
     },
     {
         "number": "1000",
-        "hint": "cin1",
+        "jyutping": "cin1",
+        "yale": "chīn",
+        "traditional": "千",
         "sprite": [14048, 448]
     },
     {
         "number": "10000",
-        "hint": "maan6",
+        "jyutping": "maan6",
+        "yale": "maahn",
+        "traditional": "万",
         "sprite": [15320, 403]
     },
     {
         "number": "100000000",
-        "hint": "jik4",
+        "jyutping": "jik1",
+        "yale": "yīk",
+        "traditional": "亿",
         "sprite": [16541, 213]
     }
 ]

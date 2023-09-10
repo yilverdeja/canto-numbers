@@ -8,12 +8,23 @@ const spriteMap = numbersJson.reduce((obj, item) => {
     return obj
 }, {})
 
-const numbers = numbersJson.reduce((obj, item) => {
-    obj[item.number] = item.hint
+const numbersJyutping = numbersJson.reduce((obj, item) => {
+    obj[item.number] = item.jyutping
     return obj
 }, {})
 
-const answer = ref("")
+const numbersYale = numbersJson.reduce((obj, item) => {
+    obj[item.number] = item.yale
+    return obj
+}, {})
+
+const numbersTraditional = numbersJson.reduce((obj, item) => {
+    obj[item.number] = item.traditional
+    return obj
+}, {})
+
+const answer = ref({})
+const answerError = ref("")
 const playState = ref(false)
 const { play } = useSound(numbersSfx, {
     sprite: spriteMap,
@@ -104,31 +115,50 @@ const until = (func) => {
 
 const generateAudioNumbers = (num) => {
 	if (num < 0 || num > 999999999999) {
-		answer.value = "sorry, value must be between 0 and 999999999999"
+		answerError.value = "sorry, value must be between 0 and 999999999999"
 	} else {
 		const ids = splitNumber(num)
-		answer.value = ids.map((element) => {
-			return numbers[element]
-		}).join(" ")
+		answer.value = {
+			traditional: ids.map((element) => {return numbersTraditional[element]}),
+			jyutping: ids.map((element) => {return numbersJyutping[element]}),
+			yale: ids.map((element) => {return numbersYale[element]})
+		}
+		answerError.value = ""
 		playSounds(ids)
 	}
 }
 
-const getRomanization = () => {
-	return answer.value
+const getRomanization = (hintType: string) => {
+	if (Object.keys(answer.value).length == 0) return ""
+	if (["jyutping", "yale", "traditional"].includes(hintType)) {
+		return (answer.value)[hintType].join(" ")
+	} else {
+		return ""
+	}
+	
 }
 
 defineExpose({generateAudioNumbers, getRomanization})
 
 defineProps({
-    show: {
+    showJyutping: {
         type: Boolean,
         default: false
-    }
+    },
+	showYale: {
+        type: Boolean,
+        default: false
+    },
+	showTraditional: {
+        type: Boolean,
+        default: false
+    },
 })
 
 </script>
 
 <template>
-    <div v-if="show">{{answer}}</div>
+    <div v-if="showJyutping">{{ getRomanization("jyutping") }}</div>
+	<div v-if="showYale">{{ getRomanization("yale") }}</div>
+	<div v-if="showTraditional">{{ getRomanization("traditional") }}</div>
 </template>
