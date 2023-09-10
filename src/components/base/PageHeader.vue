@@ -1,6 +1,7 @@
 <script setup lang="ts">
 const modalOpen = ref(false)
 
+
 </script>
 
 <template>
@@ -8,7 +9,10 @@ const modalOpen = ref(false)
         <nav class="relative max-w-[85rem] w-full mx-auto px-8 flex items-center justify-between">
             <!-- brand + collapsed nav -->
             <div class="flex items-center md:justify-between w-full justify-center">
-                <h1 class="font-medium text-2xl cursor-pointer" @click="$router.push('/')">CantoNumbers</h1>
+                <div class="flex flex-row">
+                    <img src="@/assets/canto-numbers.svg" width="25" class="mr-1"/>
+                    <h1 class="font-medium text-2xl cursor-pointer" @click="$router.push('/')">CantoNumbers</h1>
+                </div>
             </div>
 
             <!-- nav -->
