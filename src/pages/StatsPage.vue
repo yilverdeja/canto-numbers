@@ -57,10 +57,10 @@ const closeModal = () => {
                     <button class="text-xl md:text-2xl font-light md:ml-4 my-4 px-8 py-2 bg-slate-100 hover:bg-slate-200 rounded-md" @click="reset">reset</button>
                 </div>
             </div>
-            <p class="py-2 text-xl md:text-2xl font-light">See all sessions below</p>
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                <div v-for="session of sessions" :key="session" class="font-light rounded-md shadow-xl bg-white p-2">
-                    <p><span class="font-medium">type: </span>{{ session.type }}</p>
+            <p class="py-2 text-xl md:text-2xl font-light">View all sessions below</p>
+            <div v-if="sessions.length > 0" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                <div v-for="session of sessions" :key="session" class="text-xl font-light rounded-md shadow-xl bg-slate-100 p-2">
+                    <p class="font-medium">{{ session.type }}</p>
                     <div class="flex flex-row">
                         <div v-for="option in Object.keys(session.options)" :key="option" class="pr-1">
                             <p><span class="font-medium">{{ option }}: </span>{{ session.options[option] }}</p>
@@ -75,6 +75,7 @@ const closeModal = () => {
                     <p class="pr-1"><span class="font-medium">duration: </span>{{ ((new Date(session.end_at).getTime() - new Date(session.start_at).getTime())/1000).toFixed(2)}}s</p>
                 </div>
             </div>
+            <p v-else class="py-2 text-lg md:text-xl font-light">No session data available</p>
         </div>
         <SettingsModal :is-open="modalOpen" @close="closeModal"/>
         <PageFooter />
