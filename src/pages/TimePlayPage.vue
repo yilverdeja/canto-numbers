@@ -24,6 +24,7 @@ useHead({
 
 // data & sprits
 const currSprite = ref("")
+const currSpriteIds = ref<String[]>([])
 
 // sound
 import { useSound } from "@vueuse/sound"
@@ -56,77 +57,10 @@ watch([hintType, forceShowHint], ([newHintType, newForceShowHint]) => {
 
 // variables
 const showHint = ref(forceShowHint.value)
-const guessNumber = ref("")
-const guessInput = ref(null)
 const answerVal = ref("answer")
 const answer = ref("?")
 
 /* GAME FUNCTIONS */
-
-const getRandomTime = () => {
-    let minMinute = 0
-    let maxMinute = 59
-    let randomHour = Math.floor(Math.random() * (maxVal.value - minVal.value + 1)) + minVal.value
-    let randomMinute = Math.floor(Math.random() * (maxMinute - minMinute + 1)) + minMinute
-
-    let randomHourStr = randomHour.toString()
-    let randomMinuteStr = randomMinute.toString()
-    if (randomHourStr.length == 1) {
-        randomHourStr = "0"+randomHourStr
-    }
-    if (randomMinuteStr.length == 1) {
-        randomMinuteStr = "0"+randomMinuteStr
-    }
-
-    return `${randomHourStr}:${randomMinuteStr}`
-    // return Math.floor(Math.random() * (maxVal.value - minVal.value + 1)) + minVal.value
-}
-
-const validateGuess = (guessNumber: string) => {
-    if (guessNumber.length == 4) {
-        guessNumber = "0" + guessNumber
-    }
-    // const error = ref(null)
-    // const guess = ref(null)
-    // let regex = new RegExp(/^(?:[01]?[0-9]|2[0-3]):[0-5]?[0-9](?::[0-5]?[0-9])?$/);
-    // if (regex.test(guessNumber)) {
-    //     guess.value = guessNumber
-    // } else {
-    //     error.value("Not a valid time")
-    // }
-
-    // return { error, guess }
-    return guessNumber
-}
-
-const checkGuess = (guessNumber: string) => {
-    guessNumber = validateGuess(guessNumber)
-    if (guessNumber == currSprite.value) {
-        playCorrect()
-        addToCorrect(currSprite.value)
-    } else {
-        playWrong()
-        addToMissed(currSprite.value)
-    }
-    showAnswer()
-}
-
-const playTime = (num) => {
-    // if (typeof(num) === "number") {
-    childRef.value.generateAudioNumbers(num)
-	// }
-}
-
-const makeGuess = (guessNumber: string) => {
-    checkGuess(guessNumber)
-    currSprite.value = getRandomTime()
-    setTimeout(() => {
-        playTime(currSprite.value)
-    }, 200)
-
-    if (!forceShowHint.value) showHint.value = false
-
-}
 
 const toggleGameRun = debounce((event) => {
     if (event.code == "Space") {
@@ -136,7 +70,9 @@ const toggleGameRun = debounce((event) => {
 }, 100)
 
 const repeatAudio = () => {
-    playTime(currSprite.value)
+    // playTime(currSprite.value)
+    // childRef.value.play(currSpriteIds.value)
+    childRef.value.play()
 }
 
 const handleShortcuts = debounce((event) => {
@@ -151,17 +87,17 @@ const handleShortcuts = debounce((event) => {
 
 const game_start_at = ref<Date>()
 const start = () => {
-    currSprite.value = getRandomTime()
     setTimeout(() => {
         game_start_at.value = new Date()
-        playTime(currSprite.value)
+        // playTime(currSprite.value)
+        childRef.value.play()
         focusInput()
     }, 200)
 }
 
 const focusInput = () => {
-    if (guessInput.value) {
-        guessInput.value.focus()
+    if (childRef.value) {
+        childRef.value.focusInput()
     }
 }
 
@@ -172,17 +108,17 @@ const pause = () => {
 }
 
 const hint = () => {
-    return childRef.value ? childRef.value.getRomanization(hintType.value) : ""
+    // console.log(childRef.value.getRomanizedText('jyutping').value)
+    return childRef.value ? childRef.value.getRomanizedText(hintType.value) : ""
 }
 
 const submit = () => {
-    makeGuess(guessNumber.value)
-    guessNumber.value = ""
+    childRef.value.submit()
 }
 
-const showAnswer = () => {
-    answer.value = currSprite.value
-    answerVal.value = guessNumber.value == currSprite.value ? "correct" : "missed"
+const showAnswer = (ans: string, isCorrect: boolean) => {
+    answer.value = ans
+    answerVal.value = isCorrect ? "correct" : "missed"
     setTimeout(() => {
         answer.value = "?"
         answerVal.value = "answer"
@@ -191,12 +127,19 @@ const showAnswer = () => {
 
 /* MOUNT & DEMOUNT */
 const query = ref(route.query)
+const options = ref({})
 onBeforeMount(() => {
     if ("min" in query.value && Number(query.value.min)) {
         minVal.value = Number(query.value.min)
     }
     if ("max" in query.value && Number(query.value.max)) {
         maxVal.value = Number(query.value.max)
+    }
+    options.value = {
+        maxHour: 12,
+        minHour: 1,
+        maxMinute: 59,
+        minMinute: 0
     }
 })
 
@@ -220,26 +163,26 @@ const closeModal = () => {
     if (modalOpen.value) {
         modalOpen.value = false 
         setTimeout(() => {
-            playTime(currSprite.value)
+            childRef.value.play()
         }, 200)
     }
 }
 
-const check = (event) => {
-    // console.log(event)
-    if (event.data) {
-        const isAllowed = Number.isInteger(parseInt(event.data)) || event.data == ":"
-        if (!isAllowed) {
-            guessNumber.value = guessNumber.value.substring(0, guessNumber.value.length - 1)
-        }
+const handleResponse = (isCorrect: boolean, value: string) => {
+    if (isCorrect) {
+        playCorrect()
+        addToCorrect(value)
+    } else {
+        playWrong()
+        addToMissed(value)
     }
 
-    // check validation
-    // the first number can be 0 to 9 however, if the first number is greater than 2 it must follow a ':'
-    // the colon can be added automatically (it would make things faster for both desktop and mobile users) - but this would probably be best by forcing two digits : two digits
-    // the first last digit can be from 0 to 5
-    // the second last digit can be 0 to 9
-    // so you have to count the digits
+    showAnswer(value, true)
+    if (!forceShowHint.value) showHint.value = false
+    childRef.value.generateNewValue()
+    setTimeout(() => {
+        childRef.value.play()
+    }, 200)
 }
 
 </script>
@@ -249,6 +192,7 @@ const check = (event) => {
         <PageHeader />
         <div class="max-w-[85rem] w-full mx-auto px-4 h-full flex flex-col py-4 sm:py-10">
             <!-- game -->
+            {{ currSprite }}
             <div class="">
                 <div class="text-2xl md:text-3xl font-medium py-4 grid grid-cols-1 md:grid-cols-2 gap-6 border-b-4 mb-8">
                     <div class="grid grid-cols-2 gap-3 items-center">
@@ -261,8 +205,7 @@ const check = (event) => {
                     </div>
                 </div>
                 <div class="text-center">
-                    <input ref="guessInput" v-model="guessNumber" class="text-5xl sm:text-8xl text-center w-full [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none caret-transparent" type="text" placeholder="guess" autofocus @keyup.enter="submit" @input="check"/>
-                    <GenerateAudioTime ref="childRef"/>
+                    <GuessInput ref="childRef" input-category="time" :options="options" @response="handleResponse"/>
                 </div>
                 <div class="grid grid-cols-3 gap-3 w-full py-4">
                     <button class="text-xl md:text-2xl font-light text-center py-4 bg-slate-100 hover:bg-slate-200 rounded-md" @click="submit">submit <span class="hidden md:inline-block">(enter)</span></button>

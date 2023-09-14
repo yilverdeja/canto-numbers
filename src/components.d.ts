@@ -7,11 +7,14 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
+    CantoInput: typeof import('./components/play/CantoInput.vue')['default']
     copy: typeof import('./components/play/GenerateAudioNumbers copy.vue')['default']
     GenerateAudioNumbers: typeof import('./components/play/GenerateAudioNumbers.vue')['default']
     GenerateAudioTime: typeof import('./components/play/GenerateAudioTime.vue')['default']
+    GuessInput: typeof import('./components/play/GuessInput.vue')['default']
     PageFooter: typeof import('./components/base/PageFooter.vue')['default']
     PageHeader: typeof import('./components/base/PageHeader.vue')['default']
+    RequestInput: typeof import('./components/play/RequestInput.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SettingsModal: typeof import('./components/modals/SettingsModal.vue')['default']

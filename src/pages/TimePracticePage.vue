@@ -2,7 +2,6 @@
 import { debounce } from "lodash-es"
 const route = useRoute()
 const router = useRouter()
-const num = ref()
 const childRef = ref(null)
 
 useHead({
@@ -19,74 +18,9 @@ useHead({
   ],
 })
 
-const validate = () => {
-    let errorMsg = null
-
-    // not the correct length
-    if (num.value.length < 4 || num.value.length > 5) {
-        errorMsg = "The value must be in the format hh:mm"
-    }
-
-    // not the correct format
-
-    if (num.value.length == 4) {
-        let hour = Number(num.value[0])
-        if (Number.isNaN(hour)) {
-            errorMsg = ""
-        }
-        let minute = Number([num.value[2], num.value[3]].join(""))
-        if (Number.isNaN(minute)) {
-            errorMsg = ""
-        }
-        if (num.value[1] !== ":") {
-            errorMsg = "The value must be in the format hh:mm"
-        } else if (hour <= 0 || hour > 12) {
-            errorMsg = "The hour must be between 1 and 12"
-        } else if (minute < 0 || minute >= 60) {
-            errorMsg = "The minute must be between 00 and 59"
-        }
-    } else if (num.value.length == 5) {
-        let hour = Number([num.value[0], num.value[1]].join(""))
-        if (Number.isNaN(hour)) {
-            errorMsg = ""
-        }
-        let minute = Number([num.value[3], num.value[4]].join(""))
-        if (Number.isNaN(minute)) {
-            errorMsg = ""
-        }
-        if (num.value[2] !== ":") {
-            errorMsg = "The value must be in the format hh:mm"
-        } else if (hour <= 0 || hour > 12) {
-            errorMsg = "The hour must be between 1 and 12"
-        } else if (minute < 0 || minute >= 60) {
-            errorMsg = "The minute must be between 00 and 59"
-        }
-    }
-
-    // not the correct hh values
-
-    // not the correct mm values
-
-    return { errorMsg }
-}
-
-const submit = () => {
-    // TODO check the num.value is allowed
-    // must be between 01:00 to 12:59
-    const { errorMsg } = validate()
-    if (!errorMsg) {
-        console.log("submit:", num.value)
-        childRef.value.generateAudioNumbers(num.value)
-    } else {
-        console.log(errorMsg)
-    }
-    
-}
-
-const guessInput = ref(null)
 const focusInput = () => {
-    if (guessInput.value) {
-        guessInput.value.focus()
+    if (childRef.value) {
+        childRef.value.focusInput()
     }
 }
 
@@ -126,6 +60,7 @@ onMounted(() => {
     window.addEventListener("keypress", handleShortcuts)
     window.addEventListener("click", focusInput)
 	window.addEventListener("keydown", returnHome)
+    focusInput()
 })
 
 onUnmounted(() => {
@@ -142,18 +77,13 @@ const closeModal = () => {
     }
 }
 
+const submit = () => {
+    childRef.value.submit()
+}
+
 const isJyutping = ref(false)
 const isYale = ref(false)
 const isTraditional = ref(false)
-
-const check = (event) => {
-    if (event.data) {
-        const isAllowed = Number.isInteger(parseInt(event.data)) || event.data == ":"
-        if (!isAllowed) {
-            num.value = num.value.substring(0, num.value.length - 1)
-        }
-    }
-}
 
 </script>
 
@@ -169,8 +99,7 @@ const check = (event) => {
 					<p class="py-2">Type in a valid time to see what it sounds like.</p>
 					<!-- <p class="py-2 text-center md:text-left"><span class="font-medium">Min: </span>0 & <span class="font-medium">Max: </span>999999999999</p> -->
 					<div class="text-center">
-						<input ref="guessInput" v-model="num" class="text-5xl sm:text-8xl text-center w-full [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none caret-transparent" type="text" placeholder="input" autofocus min="0" max="999999999999" @keyup.enter="submit" @input="check"/>
-						<GenerateAudioTime ref="childRef" class="py-2" :show-jyutping="isJyutping" :show-yale="isYale" :show-traditional="isTraditional"/>
+                        <RequestInput ref="childRef" input-category="time" :show-jyutping="isJyutping" :show-traditional="isTraditional" :show-yale="isYale"/>
 					</div>
 				</div>
                 <div class="flex flex-col md:flex-row text-center justify-center">
