@@ -1,0 +1,23 @@
+[
+    {
+        "item": ":",
+        "jyutping": "dim2",
+        "yale": "dím",
+        "traditional": "點",
+        "sprite": [115, 329]
+    },
+    {
+        "item": "minute",
+        "jyutping": "fan1",
+        "yale": "fān",
+        "traditional": "分",
+        "sprite": [1272, 424]
+    },
+    {
+        "item": "half",
+        "jyutping": "bun3",
+        "yale": "bun",
+        "traditional": "半",
+        "sprite": [2540, 306]
+    }
+]

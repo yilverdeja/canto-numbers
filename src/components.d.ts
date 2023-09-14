@@ -7,7 +7,9 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
+    copy: typeof import('./components/play/GenerateAudioNumbers copy.vue')['default']
     GenerateAudioNumbers: typeof import('./components/play/GenerateAudioNumbers.vue')['default']
+    GenerateAudioTime: typeof import('./components/play/GenerateAudioTime.vue')['default']
     PageFooter: typeof import('./components/base/PageFooter.vue')['default']
     PageHeader: typeof import('./components/base/PageHeader.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']

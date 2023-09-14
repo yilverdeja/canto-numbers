@@ -1,0 +1,185 @@
+<script setup lang="ts">
+import { debounce } from "lodash-es"
+const route = useRoute()
+const router = useRouter()
+const num = ref()
+const childRef = ref(null)
+
+useHead({
+  title: route.meta.title,
+  meta: [
+    {
+      property: 'og:title',
+      content: route.meta.title,
+    },
+    {
+      name: 'twitter:title',
+      content: route.meta.title,
+    },
+  ],
+})
+
+const validate = () => {
+    let errorMsg = null
+
+    // not the correct length
+    if (num.value.length < 4 || num.value.length > 5) {
+        errorMsg = "The value must be in the format hh:mm"
+    }
+
+    // not the correct format
+
+    if (num.value.length == 4) {
+        let hour = Number(num.value[0])
+        if (Number.isNaN(hour)) {
+            errorMsg = ""
+        }
+        let minute = Number([num.value[2], num.value[3]].join(""))
+        if (Number.isNaN(minute)) {
+            errorMsg = ""
+        }
+        if (num.value[1] !== ":") {
+            errorMsg = "The value must be in the format hh:mm"
+        } else if (hour <= 0 || hour > 12) {
+            errorMsg = "The hour must be between 1 and 12"
+        } else if (minute < 0 || minute >= 60) {
+            errorMsg = "The minute must be between 00 and 59"
+        }
+    } else if (num.value.length == 5) {
+        let hour = Number([num.value[0], num.value[1]].join(""))
+        if (Number.isNaN(hour)) {
+            errorMsg = ""
+        }
+        let minute = Number([num.value[3], num.value[4]].join(""))
+        if (Number.isNaN(minute)) {
+            errorMsg = ""
+        }
+        if (num.value[2] !== ":") {
+            errorMsg = "The value must be in the format hh:mm"
+        } else if (hour <= 0 || hour > 12) {
+            errorMsg = "The hour must be between 1 and 12"
+        } else if (minute < 0 || minute >= 60) {
+            errorMsg = "The minute must be between 00 and 59"
+        }
+    }
+
+    // not the correct hh values
+
+    // not the correct mm values
+
+    return { errorMsg }
+}
+
+const submit = () => {
+    // TODO check the num.value is allowed
+    // must be between 01:00 to 12:59
+    const { errorMsg } = validate()
+    if (!errorMsg) {
+        console.log("submit:", num.value)
+        childRef.value.generateAudioNumbers(num.value)
+    } else {
+        console.log(errorMsg)
+    }
+    
+}
+
+const guessInput = ref(null)
+const focusInput = () => {
+    if (guessInput.value) {
+        guessInput.value.focus()
+    }
+}
+
+const returnHome = debounce((event) => {
+    if (event.code == "Space") {
+        home()
+    }
+}, 100)
+
+const home = () => {
+	router.push('/')
+}
+
+// settings store
+import { useSettingsStore } from '@/store/settingsStore';
+const settingsStore = useSettingsStore()
+const { hintType } = storeToRefs(settingsStore)
+
+watch([hintType], () => {
+    updateHint()
+})
+
+const handleShortcuts = debounce((event) => {
+    if (event.key == "s") {
+        modalOpen.value = true
+    }
+}, 100)
+
+const updateHint = () => {
+    isJyutping.value = hintType.value == "jyutping"
+    isYale.value = hintType.value == "yale"
+    isTraditional.value = hintType.value == "traditional"
+}
+
+onMounted(() => {
+    updateHint()
+    window.addEventListener("keypress", handleShortcuts)
+    window.addEventListener("click", focusInput)
+	window.addEventListener("keydown", returnHome)
+})
+
+onUnmounted(() => {
+    window.removeEventListener("keypress", handleShortcuts)
+    window.removeEventListener("click", focusInput)
+	window.removeEventListener("keydown", returnHome)
+})
+
+const modalOpen = ref(false)
+
+const closeModal = () => {
+    if (modalOpen.value) {
+        modalOpen.value = false
+    }
+}
+
+const isJyutping = ref(false)
+const isYale = ref(false)
+const isTraditional = ref(false)
+
+const check = (event) => {
+    if (event.data) {
+        const isAllowed = Number.isInteger(parseInt(event.data)) || event.data == ":"
+        if (!isAllowed) {
+            num.value = num.value.substring(0, num.value.length - 1)
+        }
+    }
+}
+
+</script>
+
+<template>
+    <div class="flex flex-col h-screen">
+        <PageHeader />
+		<div ref="gameArea" class="max-w-[85rem] w-full mx-auto px-4 h-full flex flex-col py-4 sm:py-10">
+            <!-- instructions -->
+            <div>
+                <h1 class="text-5xl md:text-6xl py-4">Practice</h1>
+				<!-- instructions -->
+				<div class="text-xl md:text-2xl font-light">
+					<p class="py-2">Type in a valid time to see what it sounds like.</p>
+					<!-- <p class="py-2 text-center md:text-left"><span class="font-medium">Min: </span>0 & <span class="font-medium">Max: </span>999999999999</p> -->
+					<div class="text-center">
+						<input ref="guessInput" v-model="num" class="text-5xl sm:text-8xl text-center w-full [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none caret-transparent" type="text" placeholder="input" autofocus min="0" max="999999999999" @keyup.enter="submit" @input="check"/>
+						<GenerateAudioTime ref="childRef" class="py-2" :show-jyutping="isJyutping" :show-yale="isYale" :show-traditional="isTraditional"/>
+					</div>
+				</div>
+                <div class="flex flex-col md:flex-row text-center justify-center">
+                    <button class="text-xl md:text-2xl font-light my-4 px-8 py-2 bg-slate-100 hover:bg-slate-200 rounded-md" @click="submit">submit <span class="hidden md:inline-block">(enter)</span></button>
+					<button class="text-xl md:text-2xl font-light md:ml-4 my-4 px-8 py-2 bg-slate-100 hover:bg-slate-200 rounded-md" @click="home">home <span class="hidden md:inline-block">(space)</span></button>
+                </div>
+            </div>
+        </div>
+        <SettingsModal :is-open="modalOpen" @close="closeModal"/>
+        <PageFooter />
+    </div>
+</template>

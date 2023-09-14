@@ -3,6 +3,8 @@ import HomePage from '@/pages/HomePage.vue'
 import PlayPage from '@/pages/PlayPage.vue'
 import PracticePage from '@/pages/PracticePage.vue'
 import StatsPage from '@/pages/StatsPage.vue'
+import TimePlayPage from '@/pages/TimePlayPage.vue'
+import TimePracticePage from '@/pages/TimePracticePage.vue'
 
 const routes = [
   {
@@ -18,12 +20,27 @@ const routes = [
     name: "play",
     component: PlayPage,
     meta: {
-      title: 'Play Canto Numbers',
+      title: 'Play Canto Integers',
+    },
+  },
+  {
+    path: '/time',
+    name: "time",
+    component: TimePlayPage,
+    meta: {
+      title: 'Play Canto Time',
     },
   },
   {
     path: '/practice',
     component: PracticePage,
+    meta: {
+      title: 'Practice Canto Numbers',
+    },
+  },
+  {
+    path: '/practicetime',
+    component: TimePracticePage,
     meta: {
       title: 'Practice Canto Numbers',
     },

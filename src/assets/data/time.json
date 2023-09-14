@@ -1,23 +1,100 @@
 [
     {
-        "item": ":",
+        "number": "0",
+        "jyutping": "ling4",
+        "yale": "lìhng",
+        "traditional": "零",
+        "sprite": [100, 356]
+    },
+    {
+        "number": "1",
+        "jyutping": "jat1",
+        "yale": "yāt",
+        "traditional": "一",
+        "sprite": [1299, 194]
+    },
+    {
+        "number": "2",
+        "jyutping": "ji6",
+        "yale": "yih",
+        "traditional": "二",
+        "sprite": [2346, 351]
+    },
+    {
+        "number": "3",
+        "jyutping": "saam1",
+        "yale": "sāam",
+        "traditional": "三",
+        "sprite": [3514, 445]
+    },
+    {
+        "number": "4",
+        "jyutping": "sei3",
+        "yale": "sei",
+        "traditional": "四",
+        "sprite": [4786, 492]
+    },
+    {
+        "number": "5",
+        "jyutping": "ng5",
+        "yale": "ńgh",
+        "traditional": "五",
+        "sprite": [6111, 335]
+    },
+    {
+        "number": "6",
+        "jyutping": "luk6",
+        "yale": "luhk",
+        "traditional": "六",
+        "sprite": [7247, 220]
+    },
+    {
+        "number": "7",
+        "jyutping": "cat1",
+        "yale": "chāt",
+        "traditional": "七",
+        "sprite": [8336, 278]
+    },
+    {
+        "number": "8",
+        "jyutping": "baat3",
+        "yale": "baat",
+        "traditional": "八",
+        "sprite": [9488, 236]
+    },
+    {
+        "number": "9",
+        "jyutping": "gau2",
+        "yale": "gáu",
+        "traditional": "九",
+        "sprite": [10578, 388]
+    },
+    {
+        "number": "10",
+        "jyutping": "sap6",
+        "yale": "sahp",
+        "traditional": "十",
+        "sprite": [11766, 298]
+    },
+    {
+        "number": ":",
         "jyutping": "dim2",
         "yale": "dím",
         "traditional": "點",
-        "sprite": [115, 329]
+        "sprite": [12908, 325]
     },
     {
-        "item": "minute",
+        "number": "minute",
         "jyutping": "fan1",
         "yale": "fān",
         "traditional": "分",
-        "sprite": [1272, 424]
+        "sprite": [14060, 419]
     },
     {
-        "item": "half",
+        "number": "half",
         "jyutping": "bun3",
         "yale": "bun",
         "traditional": "半",
-        "sprite": [2540, 306]
+        "sprite": [15327, 314]
     }
 ]
