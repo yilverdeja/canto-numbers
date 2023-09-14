@@ -28,52 +28,36 @@ const { play: playCorrect } = useSound(correctSfx)
 const { play: playWrong } = useSound(wrongSfx)
 
 /* FUNCTIONS */
-const toggleGameRun = debounce((event) => {
-    if (event.code == "Space") {
-        start()
-    }
-}, 100)
-
-const start = () => {
-    let minVal = 0
-    let maxVal = 10
-    if (category.value == "hard") {
-        minVal = 100
-        maxVal = 1000
-    } else if (category.value == "medium") {
-        maxVal = 100
-    }
-    router.push({path: "/play", query: {min: minVal, max: maxVal}})
-}
-
 const handleKeyPresses = debounce((event) => {
-    if (event.key == "p") {
-        practice()
-    } else if (event.key == "s") {
+    if (event.key == "s") {
         modalOpen.value = true
     }
 }, 100)
-
-const practice = () => {
-    router.push("/practice")
-}
 
 const stats = () => {
     router.push("/stats")
 }
 
+const integers = () => {
+    router.push("/integers")
+}
+
+const time = () => {
+    router.push("/time")
+}
+
+const money = () => {
+    router.push("/money")
+}
+
 /* MOUNT & DEMOUNT */
 onMounted(() => {
     window.addEventListener("keypress", handleKeyPresses)
-    window.addEventListener("keydown", toggleGameRun)
 })
 
 onUnmounted(() => {
     window.removeEventListener("keypress", handleKeyPresses)
-    window.removeEventListener("keydown", toggleGameRun)
 })
-
-const category = ref("easy")
 
 const modalOpen = ref(false)
 
@@ -89,8 +73,8 @@ const modalOpen = ref(false)
                 <div class="grid md:grid-cols-2 gap-0 md:gap-6">
                     <!-- instructions -->
                     <div class="text-xl md:text-2xl font-light">
-                        <p class="py-2"><span class="font-medium">About: </span>Learn to distinguish numbers in Cantonese by listening</p>
-                        <p class="py-2"><span class="font-medium">How to play: </span>Type in the number you hear, and submit it to see if the guess is correct or not</p>
+                        <p class="py-2"><span class="font-medium">About: </span>Learn to distinguish different types of numbers in Cantonese like integers, time, and money</p>
+                        <p class="py-2"><span class="font-medium">How to play: </span>Select the category, choose the game settings, and click play</p>
                         <p class="py-2"><span class="font-medium">Sounds: </span>Get aquainted to the correct and wrong sound effects</p>
                         <div class="grid grid-cols-2 gap-6">
                             <button class="my-4 px-8 py-2 bg-slate-100 hover:bg-slate-200 rounded-md" @click="playCorrect">correct</button>
@@ -115,21 +99,12 @@ const modalOpen = ref(false)
                         </div>
                     </div>
                 </div>
-                
-                <div>
-                    <label class="text-xl md:text-2xl font-medium">Category:</label>
-                    <select v-model="category" class="text-xl md:text-2xl font-light rounded-md bg-slate-100 hover:bg-slate-200 border-none px-8 py-2 my-4 mx-4 appearance-none">
-                        <option value="easy">0 to 10</option>
-                        <option value="medium">0 to 100</option>
-                        <option value="hard">100 to 1000</option>
-                    </select>
-                </div>
-                <div class="flex flex-col md:flex-row text-center justify-center">
-                    <button class="text-xl md:text-2xl font-light my-4 px-8 py-2 bg-slate-100 hover:bg-slate-200 rounded-md" @click="start">start <span class="hidden md:inline-block">(space)</span></button>
-                    <div class="flex flex-row justify-between">
-                        <button class="text-xl md:text-2xl font-light md:ml-4 my-4 px-8 py-2 bg-slate-100 hover:bg-slate-200 rounded-md" @click="practice">practice <span class="hidden md:inline-block">(p)</span></button>
-                        <button class="text-xl md:text-2xl font-light md:ml-4 my-4 px-8 py-2 bg-slate-100 hover:bg-slate-200 rounded-md" @click="stats">stats</button>
-                    </div>
+
+                <div class="flex flex-col md:flex-row text-center justify-center md:justify-around">
+                    <button class="text-xl md:text-2xl font-light my-4 px-8 py-2 bg-slate-100 hover:bg-slate-200 rounded-md" @click="integers">integers</button>
+                    <button class="text-xl md:text-2xl font-light my-4 px-8 py-2 bg-slate-100 hover:bg-slate-200 rounded-md" @click="time">time</button>
+                    <button class="text-xl md:text-2xl font-light my-4 px-8 py-2 bg-slate-100 hover:bg-slate-200 rounded-md disabled:bg-slate-300" disabled @click="money">money</button>
+                    <button class="text-xl md:text-2xl font-light my-4 px-8 py-2 bg-slate-100 hover:bg-slate-200 rounded-md" @click="stats">stats</button>
                 </div>
             </div>
         </div>

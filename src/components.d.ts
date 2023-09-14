@@ -7,9 +7,10 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
-    GenerateAudioNumbers: typeof import('./components/play/GenerateAudioNumbers.vue')['default']
+    GuessInput: typeof import('./components/inputs/GuessInput.vue')['default']
     PageFooter: typeof import('./components/base/PageFooter.vue')['default']
     PageHeader: typeof import('./components/base/PageHeader.vue')['default']
+    RequestInput: typeof import('./components/inputs/RequestInput.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SettingsModal: typeof import('./components/modals/SettingsModal.vue')['default']
