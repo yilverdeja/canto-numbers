@@ -91,9 +91,12 @@ const focusInput = () => {
     }
 }
 
-const pause = () => {
-    addSession(correct.value, missed.value, total.value, playType, options, game_start_at, new Date())
+const saveSession = () => {
+    if (total.value > 0) addSession(correct.value, missed.value, total.value, playType, options, game_start_at, new Date())
     resetScore()
+}
+
+const pause = () => {
     router.push(`/${playType}`)
 }
 
@@ -154,6 +157,7 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
+    saveSession()
     window.removeEventListener("keypress", handleShortcuts)
     window.removeEventListener("keydown", toggleGameRun)
     window.removeEventListener("click", focusInput)
