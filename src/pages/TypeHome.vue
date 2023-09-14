@@ -19,15 +19,6 @@ useHead({
   ],
 })
 
-// sound
-import { useSound } from "@vueuse/sound"
-import correctSfx from "@/assets/audio/correct.mp3"
-import wrongSfx from "@/assets/audio/wrong.mp3"
-
-// sound effects
-const { play: playCorrect } = useSound(correctSfx)
-const { play: playWrong } = useSound(wrongSfx)
-
 /* FUNCTIONS */
 const toggleGameRun = debounce((event) => {
     if (event.code == "Space") {
@@ -65,7 +56,6 @@ const start = () => {
         router.push({path: `/${type}/play`, query: {minHour: minHour, maxHour: maxHour, minMinute: minMinute, maxMinute: maxMinute}})
     }
 
-    
 }
 
 const handleKeyPresses = debounce((event) => {
@@ -82,6 +72,10 @@ const practice = () => {
 
 const stats = () => {
     router.push("/stats")
+}
+
+const home = () => {
+    router.push("/")
 }
 
 /* MOUNT & DEMOUNT */
@@ -142,13 +136,13 @@ const modalOpen = ref(false)
                     <select v-model="selected" class="text-xl md:text-2xl font-light rounded-md bg-slate-100 hover:bg-slate-200 border-none px-8 py-2 my-4 mx-4 appearance-none">
                         <option v-for="option in options" :key="option.value" :value="option.value">{{ option.text }}</option>
                     </select>
-                </div>
-                <div class="flex flex-col md:flex-row text-center justify-center">
                     <button class="text-xl md:text-2xl font-light my-4 px-8 py-2 bg-slate-100 hover:bg-slate-200 rounded-md" @click="start">Start</button>
-                    <div class="flex flex-row justify-between">
-                        <button class="text-xl md:text-2xl font-light md:ml-4 my-4 px-8 py-2 bg-slate-100 hover:bg-slate-200 rounded-md" @click="practice">Practice</button>
-                        <button class="text-xl md:text-2xl font-light md:ml-4 my-4 px-8 py-2 bg-slate-100 hover:bg-slate-200 rounded-md" @click="stats">Stats</button>
-                    </div>
+                </div>
+                <div class="flex md:flex-row text-center flex-wrap gap-x-6">
+                    <button class="text-xl md:text-2xl font-light md:ml-4 my-4 px-8 py-2 bg-slate-100 hover:bg-slate-200 rounded-md" @click="practice">Practice</button>
+                    <button class="text-xl md:text-2xl font-light md:ml-4 my-4 px-8 py-2 bg-slate-100 hover:bg-slate-200 rounded-md" @click="home">Home</button>
+                    <button class="text-xl md:text-2xl font-light md:ml-4 my-4 px-8 py-2 bg-slate-100 hover:bg-slate-200 rounded-md" @click="stats">Stats</button>
+
                 </div>
             </div>
         </div>
