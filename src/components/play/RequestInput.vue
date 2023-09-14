@@ -196,7 +196,6 @@ const generateAudioIds = (numValue: string) => {
     const newIds = ref<String[]>([])
 
     if (props.inputCategory == "integer") {
-        console.log("generate audio for integer")
         if (digits.length == 1) {
             newIds.value.push(...digits)
         } else {
@@ -204,11 +203,9 @@ const generateAudioIds = (numValue: string) => {
         }
 
     } else if (props.inputCategory == "time") {
-        console.log("generate audio for time")
         newIds.value.push(...splitTime(digits))
 
     } else if (props.inputCategory == "money") {
-        console.log("generate audio for money")
         // TODO
     }
 
@@ -265,7 +262,6 @@ const generateRomanizedText = (ids: Array<String>) => {
 			yale: ids.map((element) => {return timeObj.yale[element]}).join(" ")
 		}
     } else if (props.inputCategory == "money") {
-        console.log("generate text money")
         // TODO
     }
 }
@@ -280,37 +276,30 @@ const getRomanizedText = (romanization: string) => {
 }
 
 const submitRequest = (requestVal: string) => {
-    console.log("submit request: ", requestVal)
     const newIds = ref(generateAudioIds(requestVal))
     generateRomanizedText(newIds.value)
-    console.log(newIds.value)
     play(newIds.value)
 }
 
 const play = (ids: Array<String>) => {
-    console.log(ids)
     if (props.inputCategory == "integer") {
-        console.log("play integer")
         playIntegerSounds(ids)
     } else if (props.inputCategory == "time") {
-        console.log("play time")
         playTimeSounds(ids)
     } else if (props.inputCategory == "money") {
-        console.log("play money")
+        // TODO
     }
 }
 
 const validateInput = () => {
     let inputVal = cantoinput.value
     if (props.inputCategory == "integer") {
-        console.log("validate integer")
         if (Number(inputVal) == parseInt(inputVal) && parseInt(inputVal) <= 999999999999 && parseInt(inputVal) >= 0) {
             return inputVal
         } else {
             errorMsg.value = `${inputVal} is not a valid integer between 0 and 1 trillion`
         }
     } else if (props.inputCategory == "time") {
-        console.log("validate time")
         const regex = /^(1[0-2]|0?[1-9]):[0-5][0-9]$/gm
         if (regex.test(inputVal)) {
             return inputVal.length == 5 ? inputVal : "0"+inputVal
@@ -319,7 +308,7 @@ const validateInput = () => {
         }
 
     } else if (props.inputCategory == "money") {
-        console.log("validate money")
+        // TODO
     }
 
     return null
@@ -340,18 +329,17 @@ const check = (event: Event) => {
     if (event.data) {
 
         if (props.inputCategory == "integer") {
-            console.log("check integer")
             allowed.value = Number.isInteger(parseInt(event.data))
         } else if (props.inputCategory == "time") {
-            console.log("check time")
             allowed.value = Number.isInteger(parseInt(event.data)) || (event.data == ":" && countBy(cantoinput.value)[":"] == 1)
         } else if (props.inputCategory == "money") {
-            console.log("check money")
             allowed.value = Number.isInteger(parseInt(event.data)) || event.data == "."
         }
 
         if (!allowed.value) {
-            errorMsg.value = "The character '" + event.data + "' is not allowed"
+            if (![" "].includes(event.data)) {
+                errorMsg.value = "The character '" + event.data + "' is not allowed"
+            }
             cantoinput.value = cantoinput.value.substring(0, cantoinput.value.length - 1)
         }
     }

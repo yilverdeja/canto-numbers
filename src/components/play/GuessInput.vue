@@ -13,7 +13,7 @@ const cantoinput = ref("")
 const romanizedText = ref({})
 const errorMsg = ref("")
 
-const integerObj = {
+const integersObj = {
     spriteMap: numbersJson.reduce((obj, item) => {
         obj[item.number] = item.sprite
         return obj
@@ -51,12 +51,12 @@ const timeObj = {
     }, {})
 }
 
-const playIntegerState = ref(false)
-const { play: playInteger } = useSound(numbersSfx, {
-    sprite: integerObj.spriteMap,
+const playintegersState = ref(false)
+const { play: playintegers } = useSound(numbersSfx, {
+    sprite: integersObj.spriteMap,
     interrupt: false,
 	onend: () => {
-		playIntegerState.value = false
+		playintegersState.value = false
 	},
 })
 
@@ -70,11 +70,11 @@ const { play: playTime } = useSound(timeSfx, {
 })
 
 // https://stackoverflow.com/questions/22125865/how-to-wait-until-a-predicate-condition-becomes-true-in-javascript/72350987#72350987
-const playIntegerSounds = async (soundIds: Array<String>) => {
+const playintegersSounds = async (soundIds: Array<String>) => {
 	for (let id of soundIds) {
-		playIntegerState.value = true
-		playInteger({id: id})
-		await until(() => { return playIntegerState.value == false })
+		playintegersState.value = true
+		playintegers({id: id})
+		await until(() => { return playintegersState.value == false })
 	}
 }
 
@@ -92,25 +92,22 @@ const until = (func) => {
 }
 
 const generateRandom = () => {
-    if (props.inputCategory == "integer") {
-        console.log("generate random integer")
+    if (props.inputCategory == "integers") {
         return (Math.floor(Math.random() * (props.options.max - props.options.min + 1)) + props.options.min).toString()
 
     } else if (props.inputCategory == "time") {
-        console.log("generate random time")
         let randomHour = (Math.floor(Math.random() * (props.options.maxHour - props.options.minHour + 1)) + props.options.minHour).toString().padStart(2, "0")
         let randomMinute = (Math.floor(Math.random() * (props.options.maxMinute - props.options.minMinute + 1)) + props.options.minMinute).toString().padStart(2, "0")
 
         return `${randomHour}:${randomMinute}`
 
     } else if (props.inputCategory == "money") {
-        console.log("generate random money")
         return (1.5).toString() // TODO
 
     }
 }
 
-const splitInteger = (digits: Array<String>) => {
+const splitintegers = (digits: Array<String>) => {
     let newDigits = digits
 
 	// if all the elements in digits contains "0" then just return an empty array
@@ -123,19 +120,19 @@ const splitInteger = (digits: Array<String>) => {
 		cutDigits = digits.slice(0, digits.length - 9 + 1)
 		newDigits = digits.slice(digits.length - 9 + 1, digits.length)
 		pos = newDigits.length - 1
-		newIds.push(...splitInteger(cutDigits))
+		newIds.push(...splitintegers(cutDigits))
 		newIds.push("100000000") 
 	} else if (digits.length >= 5) { // call splitNumberRecu for numbers above 10,000 to apply pattern
 		cutDigits = digits.slice(0, digits.length - 5 + 1)
 		newDigits = digits.slice(digits.length - 5 + 1, digits.length)
 		pos = newDigits.length - 1
-		newIds.push(...splitInteger(cutDigits))
+		newIds.push(...splitintegers(cutDigits))
 		newIds.push("10000")
 	}
 
 	if (pos >= 5) { // if after the cut, digits still exceed more than 4, then shorten it again
 		// this check makes sure if the number is beyond 100,000,000, it will still  check the values at 10,000+
-		newIds.push(...splitInteger(newDigits))
+		newIds.push(...splitintegers(newDigits))
 	} else { // number pattern from 0 to 9999
 		for (let id of newDigits) {
 			if (id == "0") {
@@ -214,20 +211,17 @@ const generateAudioIds = (numValue: string) => {
     const digits = numValue.split("")
     const newIds = ref<String[]>([])
 
-    if (props.inputCategory == "integer") {
-        console.log("generate audio for integer")
+    if (props.inputCategory == "integers") {
         if (digits.length == 1) {
             newIds.value.push(...digits)
         } else {
-            newIds.value.push(...splitInteger(digits))
+            newIds.value.push(...splitintegers(digits))
         }
 
     } else if (props.inputCategory == "time") {
-        console.log("generate audio for time")
         newIds.value.push(...splitTime(digits))
 
     } else if (props.inputCategory == "money") {
-        console.log("generate audio for money")
         // TODO
     }
 
@@ -253,9 +247,9 @@ const props = defineProps({
     },
     inputCategory: {
         type: String,
-        default: "integer",
+        default: "integers",
         validator(value: string) {
-            return ["integer", "time", "money"].includes(value)
+            return ["integers", "time", "money"].includes(value)
         },
         required: true
     },
@@ -267,7 +261,6 @@ const props = defineProps({
 })
 
 const submitGuess = (guessVal: string) => {
-    console.log("submit guess: ", guessVal)
     guessVal === currValue.value ? emit("response", true, currValue.value) : emit("response", false, currValue.value)
 }
 
@@ -280,11 +273,11 @@ const clearRomanizedText = () => {
 }
 
 const generateRomanizedText = (ids: Array<String>) => {
-    if (props.inputCategory == "integer") {
+    if (props.inputCategory == "integers") {
         romanizedText.value = {
-			traditional: ids.map((element) => {return integerObj.traditional[element]}).join(" "),
-			jyutping: ids.map((element) => {return integerObj.jyutping[element]}).join(" "),
-			yale: ids.map((element) => {return integerObj.yale[element]}).join(" ")
+			traditional: ids.map((element) => {return integersObj.traditional[element]}).join(" "),
+			jyutping: ids.map((element) => {return integersObj.jyutping[element]}).join(" "),
+			yale: ids.map((element) => {return integersObj.yale[element]}).join(" ")
 		}
     } else if (props.inputCategory == "time") {
         romanizedText.value = {
@@ -293,7 +286,6 @@ const generateRomanizedText = (ids: Array<String>) => {
 			yale: ids.map((element) => {return timeObj.yale[element]}).join(" ")
 		}
     } else if (props.inputCategory == "money") {
-        console.log("generate text money")
         // TODO
     }
 }
@@ -308,29 +300,24 @@ const getRomanizedText = (romanization: string) => {
 }
 
 const play = () => {
-    console.log(currValueIds.value)
-    if (props.inputCategory == "integer") {
-        console.log("play integer")
-        playIntegerSounds(currValueIds.value)
+    if (props.inputCategory == "integers") {
+        playintegersSounds(currValueIds.value)
     } else if (props.inputCategory == "time") {
-        console.log("play time")
         playTimeSounds(currValueIds.value)
     } else if (props.inputCategory == "money") {
-        console.log("play money")
+        // TODO
     }
 }
 
 const validateInput = () => {
     let inputVal = cantoinput.value
-    if (props.inputCategory == "integer") {
-        console.log("validate integer")
+    if (props.inputCategory == "integers") {
         if (Number(inputVal) == parseInt(inputVal) && parseInt(inputVal) <= 999999999999 && parseInt(inputVal) >= 0) {
             return inputVal
         } else {
-            errorMsg.value = `${inputVal} is not a valid integer between 0 and 1 trillion`
+            errorMsg.value = `${inputVal} is not a valid integers between 0 and 1 trillion`
         }
     } else if (props.inputCategory == "time") {
-        console.log("validate time")
         const regex = /^(1[0-2]|0?[1-9]):[0-5][0-9]$/gm
         if (regex.test(inputVal)) {
             return inputVal.length == 5 ? inputVal : "0"+inputVal
@@ -339,7 +326,7 @@ const validateInput = () => {
         }
 
     } else if (props.inputCategory == "money") {
-        console.log("validate money")
+        // TODO
     }
 
     return null
@@ -360,19 +347,18 @@ const check = (event: Event) => {
 
     if (event.data) {
 
-        if (props.inputCategory == "integer") {
-            console.log("check integer")
+        if (props.inputCategory == "integers") {
             allowed.value = Number.isInteger(parseInt(event.data))
         } else if (props.inputCategory == "time") {
-            console.log("check time")
             allowed.value = Number.isInteger(parseInt(event.data)) || (event.data == ":" && countBy(cantoinput.value)[":"] == 1)
         } else if (props.inputCategory == "money") {
-            console.log("check money")
             allowed.value = Number.isInteger(parseInt(event.data)) || event.data == "."
         }
 
         if (!allowed.value) {
-            errorMsg.value = "The character '" + event.data + "' is not allowed"
+            if (!["h", "r", " "].includes(event.data)) {
+                errorMsg.value = "The character '" + event.data + "' is not allowed"
+            }
             cantoinput.value = cantoinput.value.substring(0, cantoinput.value.length - 1)
         }
     }
