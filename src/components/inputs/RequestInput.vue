@@ -9,11 +9,12 @@ import numbersSfx from "@/assets/data/numbers.mp3"
 import timeJson from "@/assets/data/time.json"
 import timeSfx from "@/assets/data/time.mp3"
 
+import { usePlaySequence } from '@/composables/usePlaySequence'
 const cantoinput = ref("")
 const romanizedText = ref({})
 const errorMsg = ref("")
 
-const integerObj = {
+const integersObj = {
     spriteMap: numbersJson.reduce((obj, item) => {
         obj[item.number] = item.sprite
         return obj
@@ -51,9 +52,12 @@ const timeObj = {
     }, {})
 }
 
+const { playSequence: playIntegerSequence } = usePlaySequence({sfx: numbersSfx, spriteMap: integersObj.spriteMap})
+const { playSequence: playTimeSequence } = usePlaySequence({sfx: timeSfx, spriteMap: timeObj.spriteMap})
+
 const playIntegerState = ref(false)
 const { play: playInteger } = useSound(numbersSfx, {
-    sprite: integerObj.spriteMap,
+    sprite: integersObj.spriteMap,
     interrupt: false,
 	onend: () => {
 		playIntegerState.value = false
@@ -251,9 +255,9 @@ const clearRomanizedText = () => {
 const generateRomanizedText = (ids: Array<String>) => {
     if (props.inputCategory == "integers") {
         romanizedText.value = {
-			traditional: ids.map((element) => {return integerObj.traditional[element]}).join(" "),
-			jyutping: ids.map((element) => {return integerObj.jyutping[element]}).join(" "),
-			yale: ids.map((element) => {return integerObj.yale[element]}).join(" ")
+			traditional: ids.map((element) => {return integersObj.traditional[element]}).join(" "),
+			jyutping: ids.map((element) => {return integersObj.jyutping[element]}).join(" "),
+			yale: ids.map((element) => {return integersObj.yale[element]}).join(" ")
 		}
     } else if (props.inputCategory == "time") {
         romanizedText.value = {
@@ -283,9 +287,11 @@ const submitRequest = (requestVal: string) => {
 
 const play = (ids: Array<String>) => {
     if (props.inputCategory == "integers") {
-        playIntegerSounds(ids)
+        playIntegerSequence(ids)
+        // playIntegerSounds(ids)
     } else if (props.inputCategory == "time") {
-        playTimeSounds(ids)
+        playTimeSequence(ids)
+        // playTimeSounds(ids)
     } else if (props.inputCategory == "money") {
         // TODO
     }

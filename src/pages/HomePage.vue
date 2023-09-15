@@ -100,6 +100,7 @@ const modalOpen = ref(false)
                     </div>
                 </div>
 
+                <h1 class="text-3xl md:text-4xl py-4">Categories</h1>
                 <div class="flex flex-col md:flex-row text-center justify-center md:justify-around">
                     <button class="text-xl md:text-2xl font-light my-4 px-8 py-2 bg-slate-100 hover:bg-slate-200 rounded-md" @click="integers">integers</button>
                     <button class="text-xl md:text-2xl font-light my-4 px-8 py-2 bg-slate-100 hover:bg-slate-200 rounded-md" @click="time">time</button>

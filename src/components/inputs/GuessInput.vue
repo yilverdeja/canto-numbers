@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { countBy } from "lodash-es"
+import { usePlaySequence } from '@/composables/usePlaySequence'
 
 import { useSound } from "@vueuse/sound"
 
@@ -50,6 +51,9 @@ const timeObj = {
         return obj
     }, {})
 }
+
+const { playSequence: playIntegerSequence } = usePlaySequence({sfx: numbersSfx, spriteMap: integersObj.spriteMap})
+const { playSequence: playTimeSequence } = usePlaySequence({sfx: timeSfx, spriteMap: timeObj.spriteMap})
 
 const playintegersState = ref(false)
 const { play: playintegers } = useSound(numbersSfx, {
@@ -301,9 +305,11 @@ const getRomanizedText = (romanization: string) => {
 
 const play = () => {
     if (props.inputCategory == "integers") {
-        playintegersSounds(currValueIds.value)
+        // playintegersSounds(currValueIds.value)
+        playIntegerSequence(currValueIds.value)
     } else if (props.inputCategory == "time") {
-        playTimeSounds(currValueIds.value)
+        // playTimeSounds(currValueIds.value)
+        playTimeSequence(currValueIds.value)
     } else if (props.inputCategory == "money") {
         // TODO
     }
@@ -398,6 +404,7 @@ defineExpose({generateNewValue, getRomanizedText, play, focusInput, submit})
 
 <template>
     <div>
+        {{ donkey }}
         <input ref="guessInput" v-model="cantoinput" class="text-5xl sm:text-8xl text-center w-full [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none caret-transparent" type="text" placeholder="input" autofocus @keyup.enter="submit" @input="check"/>
         <div v-if="errorMsg != ''" class="text-[#ee2200]">{{ errorMsg }}</div>
     </div>
