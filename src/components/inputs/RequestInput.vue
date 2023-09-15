@@ -195,7 +195,7 @@ const generateAudioIds = (numValue: string) => {
     const digits = numValue.split("")
     const newIds = ref<String[]>([])
 
-    if (props.inputCategory == "integer") {
+    if (props.inputCategory == "integers") {
         if (digits.length == 1) {
             newIds.value.push(...digits)
         } else {
@@ -231,9 +231,9 @@ const props = defineProps({
     },
     inputCategory: {
         type: String,
-        default: "integer",
+        default: "integers",
         validator(value: string) {
-            return ["integer", "time", "money"].includes(value)
+            return ["integers", "time", "money"].includes(value)
         },
         required: true
     },
@@ -249,7 +249,7 @@ const clearRomanizedText = () => {
 }
 
 const generateRomanizedText = (ids: Array<String>) => {
-    if (props.inputCategory == "integer") {
+    if (props.inputCategory == "integers") {
         romanizedText.value = {
 			traditional: ids.map((element) => {return integerObj.traditional[element]}).join(" "),
 			jyutping: ids.map((element) => {return integerObj.jyutping[element]}).join(" "),
@@ -282,7 +282,7 @@ const submitRequest = (requestVal: string) => {
 }
 
 const play = (ids: Array<String>) => {
-    if (props.inputCategory == "integer") {
+    if (props.inputCategory == "integers") {
         playIntegerSounds(ids)
     } else if (props.inputCategory == "time") {
         playTimeSounds(ids)
@@ -293,7 +293,7 @@ const play = (ids: Array<String>) => {
 
 const validateInput = () => {
     let inputVal = cantoinput.value
-    if (props.inputCategory == "integer") {
+    if (props.inputCategory == "integers") {
         if (Number(inputVal) == parseInt(inputVal) && parseInt(inputVal) <= 999999999999 && parseInt(inputVal) >= 0) {
             return inputVal
         } else {
@@ -328,7 +328,7 @@ const check = (event: Event) => {
 
     if (event.data) {
 
-        if (props.inputCategory == "integer") {
+        if (props.inputCategory == "integers") {
             allowed.value = Number.isInteger(parseInt(event.data))
         } else if (props.inputCategory == "time") {
             allowed.value = Number.isInteger(parseInt(event.data)) || (event.data == ":" && countBy(cantoinput.value)[":"] == 1)
