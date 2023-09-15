@@ -8,6 +8,7 @@ import timeJson from "@/assets/data/time.json"
 import timeSfx from "@/assets/data/time.mp3"
 
 import { usePlaySequence } from '@/composables/usePlaySequence'
+import { useIntegers } from '@/composables/useIntegers'
 const cantoinput = ref("")
 const romanizedText = ref({})
 const errorMsg = ref("")
@@ -52,57 +53,7 @@ const timeObj = {
 
 const { playSequence: playIntegerSequence } = usePlaySequence({sfx: numbersSfx, spriteMap: integersObj.spriteMap})
 const { playSequence: playTimeSequence } = usePlaySequence({sfx: timeSfx, spriteMap: timeObj.spriteMap})
-
-const splitInteger = (digits: Array<String>) => {
-    let newDigits = digits
-
-	// if all the elements in digits contains "0" then just return an empty array
-	if (newDigits.every((element) => element == "0")) return []
-
-	let cutDigits = []
-	let newIds = []
-	let pos = digits.length - 1
-	if (digits.length >= 9) { // call splitNumberRecu for numbers above 100,000,000 to apply pattern
-		cutDigits = digits.slice(0, digits.length - 9 + 1)
-		newDigits = digits.slice(digits.length - 9 + 1, digits.length)
-		pos = newDigits.length - 1
-		newIds.push(...splitInteger(cutDigits))
-		newIds.push("100000000") 
-	} else if (digits.length >= 5) { // call splitNumberRecu for numbers above 10,000 to apply pattern
-		cutDigits = digits.slice(0, digits.length - 5 + 1)
-		newDigits = digits.slice(digits.length - 5 + 1, digits.length)
-		pos = newDigits.length - 1
-		newIds.push(...splitInteger(cutDigits))
-		newIds.push("10000")
-	}
-
-	if (pos >= 5) { // if after the cut, digits still exceed more than 4, then shorten it again
-		// this check makes sure if the number is beyond 100,000,000, it will still  check the values at 10,000+
-		newIds.push(...splitInteger(newDigits))
-	} else { // number pattern from 0 to 9999
-		for (let id of newDigits) {
-			if (id == "0") {
-				if (newIds[newIds.length-1] != "0" && pos > 0) newIds.push("0")
-			} else if (pos == 3) {
-				newIds.push(id)
-				newIds.push("1000")
-			} else if (pos == 2) {
-				newIds.push(id)
-				newIds.push("100")
-			} else if (pos == 1) {
-				if (id != "1") newIds.push(id)
-				newIds.push("10")
-			} else {
-				newIds.push(id)
-			}
-			pos -= 1
-		}
-
-		if (newIds.length > 1 && newIds[newIds.length-1] == "0") newIds.pop()
-	}
-
-	return newIds
-}
+const { generateIntegerIds, checkIntegers , validateIntegers } = useIntegers()
 
 const splitTime = (digits: Array<String>) => {
     let newIds = []
@@ -158,11 +109,7 @@ const generateAudioIds = (numValue: string) => {
     const newIds = ref<String[]>([])
 
     if (props.inputCategory == "integers") {
-        if (digits.length == 1) {
-            newIds.value.push(...digits)
-        } else {
-            newIds.value.push(...splitInteger(digits))
-        }
+        return generateIntegerIds(numValue).value
 
     } else if (props.inputCategory == "time") {
         newIds.value.push(...splitTime(digits))
@@ -256,11 +203,9 @@ const play = (ids: Array<String>) => {
 const validateInput = () => {
     let inputVal = cantoinput.value
     if (props.inputCategory == "integers") {
-        if (Number(inputVal) == parseInt(inputVal) && parseInt(inputVal) <= 999999999999 && parseInt(inputVal) >= 0) {
-            return inputVal
-        } else {
-            errorMsg.value = `${inputVal} is not a valid integer between 0 and 1 trillion`
-        }
+        const {validation, errorMessage } = validateIntegers(inputVal)
+        if (validation.value) return inputVal
+        else errorMsg.value = errorMessage.value
     } else if (props.inputCategory == "time") {
         const regex = /^(1[0-2]|0?[1-9]):[0-5][0-9]$/gm
         if (regex.test(inputVal)) {
@@ -291,7 +236,7 @@ const check = (event: Event) => {
     if (event.data) {
 
         if (props.inputCategory == "integers") {
-            allowed.value = Number.isInteger(parseInt(event.data))
+            allowed.value = checkIntegers(event.data)
         } else if (props.inputCategory == "time") {
             allowed.value = Number.isInteger(parseInt(event.data)) || (event.data == ":" && countBy(cantoinput.value)[":"] == 1)
         } else if (props.inputCategory == "money") {
