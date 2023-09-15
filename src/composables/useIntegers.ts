@@ -58,11 +58,11 @@ export function useIntegers() {
 
     const generateIds = (input: string) => {
         const digits = input.split("")
-        const newIds = ref<String[]>([])
+        const newIds = []
         if (digits.length == 1) {
-            newIds.value.push(...digits)
+            newIds.push(...digits)
         } else {
-            newIds.value.push(...splitIds(digits))
+            newIds.push(...splitIds(digits))
         }
 
         return newIds

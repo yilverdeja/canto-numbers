@@ -2,6 +2,7 @@
 import { countBy } from "lodash-es"
 import { usePlaySequence } from '@/composables/usePlaySequence'
 import { useIntegers } from '@/composables/useIntegers'
+import { useTime } from '@/composables/useTime'
 
 import numbersJson from "@/assets/data/numbers.json"
 import numbersSfx from "@/assets/data/numbers.mp3"
@@ -54,16 +55,14 @@ const timeObj = {
 const { playSequence: playIntegerSequence } = usePlaySequence({sfx: numbersSfx, spriteMap: integersObj.spriteMap})
 const { playSequence: playTimeSequence } = usePlaySequence({sfx: timeSfx, spriteMap: timeObj.spriteMap})
 const { generateIntegerIds, checkIntegers , validateIntegers, generateRandomInteger } = useIntegers()
+const { generateTimeIds, checkTime , validateTime, generateRandomTime } = useTime()
 
 const generateRandom = () => {
     if (props.inputCategory == "integers") {
         return generateRandomInteger(props.options)
 
     } else if (props.inputCategory == "time") {
-        let randomHour = (Math.floor(Math.random() * (props.options.maxHour - props.options.minHour + 1)) + props.options.minHour).toString().padStart(2, "0")
-        let randomMinute = (Math.floor(Math.random() * (props.options.maxMinute - props.options.minMinute + 1)) + props.options.minMinute).toString().padStart(2, "0")
-
-        return `${randomHour}:${randomMinute}`
+        return generateRandomTime(props.options)
 
     } else if (props.inputCategory == "money") {
         return (1.5).toString() // TODO
@@ -71,70 +70,19 @@ const generateRandom = () => {
     }
 }
 
-const splitTime = (digits: Array<String>) => {
-    let newIds = []
-
-	if (digits.length == 5) {
-
-		if (digits[0] != "0") {
-			newIds.push("10")
-		}
-		if (digits[1] != "0") {
-			newIds.push(digits[1])
-		}
-		newIds.push(":") // digits[2]
-
-		let minutesStr = [digits[3], digits[4]].join("")
-		let minutesInt = parseInt(minutesStr)
-
-		if (minutesInt == "00") {
-			return newIds
-		} else if (minutesInt == "30") {
-			newIds.push("half")
-		} else if (minutesInt % 5 == 0) {
-			let fiveCount = (minutesInt/5)
-			if (fiveCount >= 11) {
-				newIds.push("10")
-				newIds.push("1")
-			} else {
-				newIds.push(fiveCount.toString())
-			}
-			
-		} else {
-			if (digits[3] == "0") {
-				newIds.push("0")
-			} else {
-				if (digits[3] != "1") {
-					newIds.push(digits[3])
-				}
-				newIds.push("10")
-			}
-			newIds.push(digits[4])
-			newIds.push("minute")
-		}
-
-	} else {
-		return []
-	}
-
-	return newIds
-}
-
 const generateAudioIds = (numValue: string) => {
-    const digits = numValue.split("")
-    const newIds = ref<String[]>([])
 
     if (props.inputCategory == "integers") {
-        return generateIntegerIds(numValue).value
+        return generateIntegerIds(numValue)
 
     } else if (props.inputCategory == "time") {
-        newIds.value.push(...splitTime(digits))
+        return generateTimeIds(numValue)
 
     } else if (props.inputCategory == "money") {
         // TODO
     }
 
-    return newIds.value
+    return []
 }
 
 const props = defineProps({
@@ -225,12 +173,9 @@ const validateInput = () => {
         if (validation.value) return inputVal
         else errorMsg.value = errorMessage.value
     } else if (props.inputCategory == "time") {
-        const regex = /^(1[0-2]|0?[1-9]):[0-5][0-9]$/gm
-        if (regex.test(inputVal)) {
-            return inputVal.length == 5 ? inputVal : "0"+inputVal
-        } else {
-            errorMsg.value = `Input must be in the 12-hour format hh:mm or h:mm`
-        }
+        const {validation, errorMessage } = validateTime(inputVal)
+        if (validation.value) return inputVal.padStart(5, "0")
+        else errorMsg.value = errorMessage.value
 
     } else if (props.inputCategory == "money") {
         // TODO
@@ -257,7 +202,7 @@ const check = (event: Event) => {
         if (props.inputCategory == "integers") {
             allowed.value = checkIntegers(event.data)
         } else if (props.inputCategory == "time") {
-            allowed.value = Number.isInteger(parseInt(event.data)) || (event.data == ":" && countBy(cantoinput.value)[":"] == 1)
+            allowed.value = checkTime(event.data, cantoinput.value)
         } else if (props.inputCategory == "money") {
             allowed.value = Number.isInteger(parseInt(event.data)) || event.data == "."
         }
