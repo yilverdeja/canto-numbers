@@ -2,8 +2,6 @@
 import { countBy } from "lodash-es"
 import { usePlaySequence } from '@/composables/usePlaySequence'
 
-import { useSound } from "@vueuse/sound"
-
 import numbersJson from "@/assets/data/numbers.json"
 import numbersSfx from "@/assets/data/numbers.mp3"
 
@@ -54,46 +52,6 @@ const timeObj = {
 
 const { playSequence: playIntegerSequence } = usePlaySequence({sfx: numbersSfx, spriteMap: integersObj.spriteMap})
 const { playSequence: playTimeSequence } = usePlaySequence({sfx: timeSfx, spriteMap: timeObj.spriteMap})
-
-const playintegersState = ref(false)
-const { play: playintegers } = useSound(numbersSfx, {
-    sprite: integersObj.spriteMap,
-    interrupt: false,
-	onend: () => {
-		playintegersState.value = false
-	},
-})
-
-const playTimeState = ref(false)
-const { play: playTime } = useSound(timeSfx, {
-    sprite: timeObj.spriteMap,
-    interrupt: false,
-	onend: () => {
-		playTimeState.value = false
-	},
-})
-
-// https://stackoverflow.com/questions/22125865/how-to-wait-until-a-predicate-condition-becomes-true-in-javascript/72350987#72350987
-const playintegersSounds = async (soundIds: Array<String>) => {
-	for (let id of soundIds) {
-		playintegersState.value = true
-		playintegers({id: id})
-		await until(() => { return playintegersState.value == false })
-	}
-}
-
-const playTimeSounds = async (soundIds: Array<String>) => {
-	for (let id of soundIds) {
-		playTimeState.value = true
-		playTime({id: id})
-		await until(() => { return playTimeState.value == false })
-	}
-}
-
-const until = (func) => {
-	const poll = (done) => (func() ? done() : setTimeout(() => poll(done), 10))
-	return new Promise(poll)
-}
 
 const generateRandom = () => {
     if (props.inputCategory == "integers") {
@@ -305,10 +263,8 @@ const getRomanizedText = (romanization: string) => {
 
 const play = () => {
     if (props.inputCategory == "integers") {
-        // playintegersSounds(currValueIds.value)
         playIntegerSequence(currValueIds.value)
     } else if (props.inputCategory == "time") {
-        // playTimeSounds(currValueIds.value)
         playTimeSequence(currValueIds.value)
     } else if (props.inputCategory == "money") {
         // TODO
@@ -404,7 +360,6 @@ defineExpose({generateNewValue, getRomanizedText, play, focusInput, submit})
 
 <template>
     <div>
-        {{ donkey }}
         <input ref="guessInput" v-model="cantoinput" class="text-5xl sm:text-8xl text-center w-full [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none caret-transparent" type="text" placeholder="input" autofocus @keyup.enter="submit" @input="check"/>
         <div v-if="errorMsg != ''" class="text-[#ee2200]">{{ errorMsg }}</div>
     </div>

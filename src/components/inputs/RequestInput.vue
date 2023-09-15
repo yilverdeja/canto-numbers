@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { countBy } from "lodash-es"
 
-import { useSound } from "@vueuse/sound"
-
 import numbersJson from "@/assets/data/numbers.json"
 import numbersSfx from "@/assets/data/numbers.mp3"
 
@@ -54,46 +52,6 @@ const timeObj = {
 
 const { playSequence: playIntegerSequence } = usePlaySequence({sfx: numbersSfx, spriteMap: integersObj.spriteMap})
 const { playSequence: playTimeSequence } = usePlaySequence({sfx: timeSfx, spriteMap: timeObj.spriteMap})
-
-const playIntegerState = ref(false)
-const { play: playInteger } = useSound(numbersSfx, {
-    sprite: integersObj.spriteMap,
-    interrupt: false,
-	onend: () => {
-		playIntegerState.value = false
-	},
-})
-
-const playTimeState = ref(false)
-const { play: playTime } = useSound(timeSfx, {
-    sprite: timeObj.spriteMap,
-    interrupt: false,
-	onend: () => {
-		playTimeState.value = false
-	},
-})
-
-// https://stackoverflow.com/questions/22125865/how-to-wait-until-a-predicate-condition-becomes-true-in-javascript/72350987#72350987
-const playIntegerSounds = async (soundIds: Array<String>) => {
-	for (let id of soundIds) {
-		playIntegerState.value = true
-		playInteger({id: id})
-		await until(() => { return playIntegerState.value == false })
-	}
-}
-
-const playTimeSounds = async (soundIds: Array<String>) => {
-	for (let id of soundIds) {
-		playTimeState.value = true
-		playTime({id: id})
-		await until(() => { return playTimeState.value == false })
-	}
-}
-
-const until = (func) => {
-	const poll = (done) => (func() ? done() : setTimeout(() => poll(done), 10))
-	return new Promise(poll)
-}
 
 const splitInteger = (digits: Array<String>) => {
     let newDigits = digits
@@ -288,10 +246,8 @@ const submitRequest = (requestVal: string) => {
 const play = (ids: Array<String>) => {
     if (props.inputCategory == "integers") {
         playIntegerSequence(ids)
-        // playIntegerSounds(ids)
     } else if (props.inputCategory == "time") {
         playTimeSequence(ids)
-        // playTimeSounds(ids)
     } else if (props.inputCategory == "money") {
         // TODO
     }
