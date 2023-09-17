@@ -117,6 +117,10 @@ const showAnswer = (ans: string, isCorrect: boolean) => {
     }, 500)
 }
 
+const stopSound = () => {
+    childRef.value.stopSequence()
+}
+
 /* MOUNT & DEMOUNT */
 const playType = (route.path).split("/")[1]
 const query = ref(route.query)
@@ -161,6 +165,10 @@ onUnmounted(() => {
     window.removeEventListener("keypress", handleShortcuts)
     window.removeEventListener("keydown", toggleGameRun)
     window.removeEventListener("click", focusInput)
+})
+
+onBeforeUnmount(() => {
+    stopSound()
 })
 
 const childRef = ref(null)

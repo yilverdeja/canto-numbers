@@ -71,6 +71,10 @@ onUnmounted(() => {
 	window.removeEventListener("keydown", returnHome)
 })
 
+onBeforeUnmount(() => {
+    stopSound()
+})
+
 const modalOpen = ref(false)
 
 const closeModal = () => {
@@ -81,6 +85,10 @@ const closeModal = () => {
 
 const submit = () => {
     if (childRef.value) childRef.value.submit()
+}
+
+const stopSound = () => {
+    childRef.value.stopSequence()
 }
 
 const isJyutping = ref(false)
