@@ -44,6 +44,6 @@ export function usePlaySequence({sfx, spriteMap}) {
     }
     
 
-    return {playSequence}
+    return {stopSequence: stop, playSequence}
 
 }

@@ -17,8 +17,8 @@ const errorMsg = ref("")
 const { getDataObj, generateRomanizedText: grt } = useDataObjects()
 const integersObj = getDataObj(numbersJson)
 const timeObj = getDataObj(timeJson)
-const { playSequence: playIntegerSequence } = usePlaySequence({sfx: numbersSfx, spriteMap: integersObj.spriteMap})
-const { playSequence: playTimeSequence } = usePlaySequence({sfx: timeSfx, spriteMap: timeObj.spriteMap})
+const { stopSequence: stopIntegerSequence, playSequence: playIntegerSequence } = usePlaySequence({sfx: numbersSfx, spriteMap: integersObj.spriteMap})
+const { stopSequence: stopTimeSequence, playSequence: playTimeSequence } = usePlaySequence({sfx: timeSfx, spriteMap: timeObj.spriteMap})
 const { generateIntegerIds, checkIntegers , validateIntegers } = useIntegers()
 const { generateTimeIds, checkTime , validateTime } = useTime()
 
@@ -165,7 +165,17 @@ const focusInput = () => {
     }
 }
 
-defineExpose({submit, focusInput})
+const stopSequence = () => {
+    if (props.inputCategory == "integers") {
+        stopIntegerSequence()
+    } else if (props.inputCategory == "time") {
+        stopTimeSequence()
+    } else if (props.inputCategory == "money") {
+        // TODO
+    }
+}
+
+defineExpose({submit, focusInput, stopSequence})
 
 </script>
 
