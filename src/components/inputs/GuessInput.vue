@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { countBy } from "lodash-es"
+import { useDataObjects } from '@/composables/useDataObjects'
 import { usePlaySequence } from '@/composables/usePlaySequence'
 import { useIntegers } from '@/composables/useIntegers'
 import { useTime } from '@/composables/useTime'
@@ -14,44 +14,9 @@ const cantoinput = ref("")
 const romanizedText = ref({})
 const errorMsg = ref("")
 
-const integersObj = {
-    spriteMap: numbersJson.reduce((obj, item) => {
-        obj[item.number] = item.sprite
-        return obj
-    }, {}),
-    jyutping: numbersJson.reduce((obj, item) => {
-        obj[item.number] = item.jyutping
-        return obj
-    }, {}),
-    yale: numbersJson.reduce((obj, item) => {
-        obj[item.number] = item.yale
-        return obj
-    }, {}),
-    traditional: numbersJson.reduce((obj, item) => {
-        obj[item.number] = item.traditional
-        return obj
-    }, {})
-}
-
-const timeObj = {
-    spriteMap: timeJson.reduce((obj, item) => {
-        obj[item.number] = item.sprite
-        return obj
-    }, {}),
-    jyutping: timeJson.reduce((obj, item) => {
-        obj[item.number] = item.jyutping
-        return obj
-    }, {}),
-    yale: timeJson.reduce((obj, item) => {
-        obj[item.number] = item.yale
-        return obj
-    }, {}),
-    traditional: timeJson.reduce((obj, item) => {
-        obj[item.number] = item.traditional
-        return obj
-    }, {})
-}
-
+const { getDataObj, generateRomanizedText: grt } = useDataObjects()
+const integersObj = getDataObj(numbersJson)
+const timeObj = getDataObj(timeJson)
 const { playSequence: playIntegerSequence } = usePlaySequence({sfx: numbersSfx, spriteMap: integersObj.spriteMap})
 const { playSequence: playTimeSequence } = usePlaySequence({sfx: timeSfx, spriteMap: timeObj.spriteMap})
 const { generateIntegerIds, checkIntegers , validateIntegers, generateRandomInteger } = useIntegers()
@@ -131,17 +96,9 @@ const clearRomanizedText = () => {
 
 const generateRomanizedText = (ids: Array<String>) => {
     if (props.inputCategory == "integers") {
-        romanizedText.value = {
-			traditional: ids.map((element) => {return integersObj.traditional[element]}).join(" "),
-			jyutping: ids.map((element) => {return integersObj.jyutping[element]}).join(" "),
-			yale: ids.map((element) => {return integersObj.yale[element]}).join(" ")
-		}
+        romanizedText.value = grt(ids, integersObj)
     } else if (props.inputCategory == "time") {
-        romanizedText.value = {
-			traditional: ids.map((element) => {return timeObj.traditional[element]}).join(" "),
-			jyutping: ids.map((element) => {return timeObj.jyutping[element]}).join(" "),
-			yale: ids.map((element) => {return timeObj.yale[element]}).join(" ")
-		}
+        romanizedText.value = grt(ids, timeObj)
     } else if (props.inputCategory == "money") {
         // TODO
     }
