@@ -109,7 +109,7 @@ onUnmounted(() => {
                         </div>
 
                         <div class="text-center">
-                            <button class="my-4 px-8 py-2 bg-slate-100 hover:bg-slate-200 rounded-md" @click="closeModal()">back <span class="hidden md:inline-block">(b)</span></button>
+                            <button class="my-4 px-8 py-2 bg-slate-100 hover:bg-slate-200 rounded-md" @click="closeModal()">back</button>
                         </div>
                     </DialogPanel>
                 
