@@ -1,0 +1,71 @@
+[
+    {
+        "title": "Integers",
+        "description": "Master positive whole numbers in Cantonese. From zero to a trillion, learn to pronounce and understand integers effortlessly",
+        "url": "/integers",
+        "published": true,
+        "image": "/img/integers.png",
+        "sessions": [
+            {
+                "name": "0-10",
+                "value": "easy",
+                "options": {"min": 0, "max": 10}
+            },
+            {
+                "name": "0-100",
+                "value": "medium",
+                "options": {"min": 0, "max": 100}
+            },
+            {
+                "name": "0-1000",
+                "value": "hard",
+                "options": {"min": 0, "max": 1000}
+            }
+        ]
+    },
+    {
+        "title": "Time",
+        "description": "Explore the 12-hour format of time in Cantonese. Learn to tell time accurately and naturally, from morning to night",
+        "url": "/time",
+        "published": true,
+        "image": "/img/time.png",
+        "sessions": [
+            {
+                "name": "hours",
+                "value": "easy",
+                "options": {"minHour": 1, "maxHour": 12, "minMinute": 0, "maxMinute": 0}
+            },
+            {
+                "name": "half hour",
+                "value": "medium",
+                "options": {"minHour": 1, "maxHour": 12, "minMinute": 30, "maxMinute": 30}
+            },
+            {
+                "name": "all",
+                "value": "hard",
+                "options": {"minHour": 1, "maxHour": 12, "minMinute": 0, "maxMinute": 59}
+            }
+        ]
+    },
+    {
+        "title": "Money",
+        "description": "Count money with precision in Cantonese. Whether it's dollars or cents, master currency values with up to two decimal places",
+        "url": "/money",
+        "published": false,
+        "image": "/img/money.png"
+    },
+    {
+        "title": "Digits",
+        "description": "Identify individual digits spoken consecutively, just like years or phone numbers. Enhance your digit recognition skills in Cantonese",
+        "url": "/digits",
+        "published": false,
+        "image": "/img/digits.png"
+    },
+    {
+        "title": "Dates",
+        "description": "Understand how to express specific days in specific months in Cantonese. Master date formats and calendar-related vocabulary",
+        "url": "/dates",
+        "published": false,
+        "image": "/img/dates.png"
+    }
+]
