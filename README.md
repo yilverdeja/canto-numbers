@@ -12,11 +12,15 @@ Canto Numbers is an open-source game designed to help users learn how to disting
 
 Canto Numbers currently offers the following features:
 
-- Guess numbers from 0-1000 with hints of their respective Jyutping.
-- Generate numbers from 0-999,999,999,999 with their respective Jyutping.
+- Guess numbers from 0-1000 with hints.
+- Guess time in a 12-hour format from 1:00-12:59 with hints.
+- Generate numbers audio from 0-999,999,999,999 with the selected text type.
+- Generate time audio from 1:00 to 12:59 with the selected text type.
 - Keep track of your correct and missed guesses with a counter score, which is saved on your local host.
+- See simple session stats within the stats page
 - Requires sound to listen to the audio.
 - Available on both desktop and mobile devices.
+- Change hints and text type between Jyutping, Yale or Chinese Traditional Characters via Settings
 
 ## To-Do
 
@@ -27,9 +31,11 @@ Future implementations:
 - [ ] Adding a stats dashboard to see progress.
 - [ ] Incorporating more audio variations for each number.
 - [ ] Add different number categories
-  - [x] whole numbers
-  - [ ] time
+  - [x] integers
+  - [x] time
   - [ ] money (decimals)
+  - [ ] digits
+  - [ ] dates
   - [ ] math
 - [ ] Create game settings for more personalized approach
 
