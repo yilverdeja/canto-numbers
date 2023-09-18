@@ -5,9 +5,6 @@ import { debounce } from "lodash-es"
 const route = useRoute()
 const router = useRouter()
 
-const minVal = ref(0)
-const maxVal = ref(10)
-
 useHead({
   title: route.meta.title,
   meta: [
@@ -21,9 +18,6 @@ useHead({
     },
   ],
 })
-
-// data & sprits
-const currSprite = ref("")
 
 // sound
 import { useSound } from "@vueuse/sound"
@@ -56,44 +50,10 @@ watch([hintType, forceShowHint], ([newHintType, newForceShowHint]) => {
 
 // variables
 const showHint = ref(forceShowHint.value)
-const guessNumber = ref("")
-const guessInput = ref(null)
 const answerVal = ref("answer")
 const answer = ref("?")
 
 /* GAME FUNCTIONS */
-
-const getRandomNumber = () => {
-    return Math.floor(Math.random() * (maxVal.value - minVal.value + 1)) + minVal.value
-}
-
-const checkGuess = (guessNumber: string) => {
-    if (guessNumber == currSprite.value) {
-        playCorrect()
-        addToCorrect(currSprite.value)
-    } else {
-        playWrong()
-        addToMissed(currSprite.value)
-    }
-    showAnswer()
-}
-
-const playNumber = (num: Number) => {
-    if (typeof(num) === "number") {
-        childRef.value.generateAudioNumbers(num)
-	}
-}
-
-const makeGuess = (guessNumber: string) => {
-    checkGuess(guessNumber)
-    currSprite.value = getRandomNumber()
-    setTimeout(() => {
-        playNumber(currSprite.value)
-    }, 200)
-
-    if (!forceShowHint.value) showHint.value = false
-
-}
 
 const toggleGameRun = debounce((event) => {
     if (event.code == "Space") {
@@ -103,7 +63,7 @@ const toggleGameRun = debounce((event) => {
 }, 100)
 
 const repeatAudio = () => {
-    playNumber(currSprite.value)
+    if (childRef.value) childRef.value.play()
 }
 
 const handleShortcuts = debounce((event) => {
@@ -118,52 +78,75 @@ const handleShortcuts = debounce((event) => {
 
 const game_start_at = ref<Date>()
 const start = () => {
-    currSprite.value = getRandomNumber()
     setTimeout(() => {
         game_start_at.value = new Date()
-        playNumber(currSprite.value)
+        if (childRef.value) childRef.value.play()
         focusInput()
     }, 200)
 }
 
 const focusInput = () => {
-    if (guessInput.value) {
-        guessInput.value.focus()
+    if (childRef.value) {
+        childRef.value.focusInput()
     }
 }
 
-const pause = () => {
-    addSession(correct.value, missed.value, total.value, "integer", {"min": minVal.value, "max": maxVal.value}, game_start_at, new Date())
+const saveSession = () => {
+    if (total.value > 0) addSession(correct.value, missed.value, total.value, playType, options, game_start_at, new Date())
     resetScore()
-    router.push("/")
+}
+
+const pause = () => {
+    router.push(`/${playType}`)
 }
 
 const hint = () => {
-    return childRef.value ? childRef.value.getRomanization(hintType.value) : ""
+    return childRef.value ? childRef.value.getRomanizedText(hintType.value) : ""
 }
 
 const submit = () => {
-    makeGuess(guessNumber.value)
-    guessNumber.value = ""
+    if (childRef.value) childRef.value.submit()
 }
 
-const showAnswer = () => {
-    answer.value = currSprite.value
-    answerVal.value = guessNumber.value == currSprite.value ? "correct" : "missed"
+const showAnswer = (ans: string, isCorrect: boolean) => {
+    answer.value = ans
+    answerVal.value = isCorrect ? "correct" : "missed"
     setTimeout(() => {
         answer.value = "?"
         answerVal.value = "answer"
     }, 500)
 }
 
+const stopSound = () => {
+    childRef.value.stopSequence()
+}
+
 /* MOUNT & DEMOUNT */
+const playType = (route.path).split("/")[1]
 const query = ref(route.query)
+const options = ref({})
 onBeforeMount(() => {
-    if ("min" in query.value && Number(query.value.min)) {
-        minVal.value = Number(query.value.min)
-    }
-    if ("max" in query.value && Number(query.value.max)) {
-        maxVal.value = Number(query.value.max)
+
+    if (playType == "integers") {
+        options.value = {
+            min: ("min" in query.value && !Number.isNaN(Number(query.value.min)) && Number(query.value.min) >= 0 && Number(query.value.min) < 1000000000000) ? Number(query.value.min) : 0,
+            max: ("max" in query.value && !Number.isNaN(Number(query.value.max)) && Number(query.value.max) >= 0 && Number(query.value.max) < 1000000000000) ? Number(query.value.max) : 10
+        }
+
+        // TODO make sure max >= min
+
+    } else if (playType == "time") {
+        options.value = {
+            maxHour: ("maxHour" in query.value && Number(query.value.maxHour) && Number(query.value.maxHour) >= 1 && Number(query.value.maxHour) <= 12) ? Number(query.value.maxHour) : 12,
+            minHour: ("minHour" in query.value && Number(query.value.minHour) && Number(query.value.minHour) >= 1 && Number(query.value.minHour) <= 12) ? Number(query.value.minHour) : 1,
+            maxMinute: ("maxMinute" in query.value && !Number.isNaN(Number(query.value.maxMinute)) && Number(query.value.maxMinute) >= 0 && Number(query.value.maxMinute) <= 59) ? Number(query.value.maxMinute) : 59,
+            minMinute: ("minMinute" in query.value && !Number.isNaN(Number(query.value.minMinute)) && Number(query.value.minMinute) >= 0 && Number(query.value.minMinute) <= 59) ? Number(query.value.minMinute) : 0
+        }
+
+        // TODO make sure max >= min
+        
+    } else if (playType == "money") {
+        // TODO
     }
 })
 
@@ -175,9 +158,14 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
+    saveSession()
     window.removeEventListener("keypress", handleShortcuts)
     window.removeEventListener("keydown", toggleGameRun)
     window.removeEventListener("click", focusInput)
+})
+
+onBeforeUnmount(() => {
+    stopSound()
 })
 
 const childRef = ref(null)
@@ -187,46 +175,61 @@ const closeModal = () => {
     if (modalOpen.value) {
         modalOpen.value = false 
         setTimeout(() => {
-            playNumber(currSprite.value)
+            if (childRef.value) childRef.value.play()
         }, 200)
     }
+}
+
+const handleResponse = (isCorrect: boolean, value: string) => {
+    if (isCorrect) {
+        playCorrect()
+        addToCorrect(value)
+    } else {
+        playWrong()
+        addToMissed(value)
+    }
+
+    showAnswer(value, true)
+    if (!forceShowHint.value) showHint.value = false
+    if (childRef.value) childRef.value.generateNewValue()
+    setTimeout(() => {
+        if (childRef.value) childRef.value.play()
+    }, 200)
 }
 
 </script>
 
 <template>
-    <div class="flex flex-col h-screen">
-        <PageHeader />
-        <div class="max-w-[85rem] w-full mx-auto px-4 h-full flex flex-col py-4 sm:py-10">
-            <!-- game -->
-            <div class="">
-                <div class="text-2xl md:text-3xl font-medium py-4 grid grid-cols-1 md:grid-cols-2 gap-6 border-b-4 mb-8">
-                    <div class="grid grid-cols-2 gap-3 items-center">
-                        <p class="md:text-right">answer: </p>
-                        <p class="text-right md:text-left">{{ answer }}</p>
-                    </div>
-                    <div class="grid grid-cols-2 gap-3 items-center">
-                        <p class="md:text-right">hint:</p>
-                        <p class="text-right md:text-left">{{ showHint ? hint() : "" }}<button v-if="!showHint" class="bg-slate-100 hover:bg-slate-200 rounded-md px-2 font-light text-xl md:text-2xl" @click="showHint = true">show <span class="hidden md:inline-block">(h)</span></button></p>
-                    </div>
+    <PageHeader />
+    <div class="max-w-[85rem] w-full mx-auto px-4 h-full flex flex-col py-4 sm:py-10">
+        <h1 class="text-5xl md:text-6xl py-4 text-center">Guess the {{ playType.charAt(0).toUpperCase() + playType.slice(1) }}</h1>
+        <!-- game -->
+        <div class="">
+            <div class="text-2xl md:text-3xl font-medium py-4 grid grid-cols-1 md:grid-cols-2 gap-6 border-b-4 mb-8">
+                <div class="grid grid-cols-2 gap-3 items-center">
+                    <p class="md:text-right">answer: </p>
+                    <p class="text-right md:text-left">{{ answer }}</p>
                 </div>
-                <div class="text-center">
-                    <input ref="guessInput" v-model.number="guessNumber" class="text-5xl sm:text-8xl text-center w-full [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none caret-transparent" type="number" placeholder="guess" autofocus @keyup.enter="submit"/>
-                    <GenerateAudioNumbers ref="childRef"/>
-                </div>
-                <div class="grid grid-cols-3 gap-3 w-full py-4">
-                    <button class="text-xl md:text-2xl font-light text-center py-4 bg-slate-100 hover:bg-slate-200 rounded-md" @click="submit">submit <span class="hidden md:inline-block">(enter)</span></button>
-                    <button class="text-xl md:text-2xl font-light text-center py-4 bg-slate-100 hover:bg-slate-200 rounded-md" @click="repeatAudio">repeat <span class="hidden md:inline-block">(r)</span></button>
-                    <button class="text-xl md:text-2xl font-light text-center py-4 bg-slate-100 hover:bg-slate-200 rounded-md" @click="pause">pause <span class="hidden md:inline-block">(space)</span></button>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 text-xl md:text-2xl font-light text-center items-center border-t-4 pt-8">
-                    <p class="py-1 md:py-0"><span class="font-medium">correct:</span> {{ correct }}</p>
-                    <p class="py-1 md:py-0"><span class="font-medium">missed:</span> {{ missed }}</p>
-                    <p class="py-1 md:py-0"><span class="font-medium">total:</span> {{ total }}</p>
+                <div class="grid grid-cols-2 gap-3 items-center">
+                    <p class="md:text-right">hint:</p>
+                    <p class="text-right md:text-left">{{ showHint ? hint() : "" }}<button v-if="!showHint" class="bg-slate-100 hover:bg-slate-200 rounded-md px-2 font-light text-xl md:text-2xl" @click="showHint = true">show <span class="hidden md:inline-block">(h)</span></button></p>
                 </div>
             </div>
+            <div class="text-center">
+                <GuessInput ref="childRef" :input-category="playType" :options="options" @response="handleResponse"/>
+            </div>
+            <div class="grid grid-cols-3 gap-3 w-full py-4">
+                <button class="text-xl md:text-2xl font-light text-center py-4 bg-slate-100 hover:bg-slate-200 rounded-md" @click="submit">Submit</button>
+                <button class="text-xl md:text-2xl font-light text-center py-4 bg-slate-100 hover:bg-slate-200 rounded-md" @click="repeatAudio">Repeat</button>
+                <button class="text-xl md:text-2xl font-light text-center py-4 bg-slate-100 hover:bg-slate-200 rounded-md" @click="pause">End</button>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 text-xl md:text-2xl font-light text-center items-center border-t-4 pt-8">
+                <p class="py-1 md:py-0"><span class="font-medium">correct:</span> {{ correct.length }}</p>
+                <p class="py-1 md:py-0"><span class="font-medium">missed:</span> {{ missed.length }}</p>
+                <p class="py-1 md:py-0"><span class="font-medium">total:</span> {{ total }}</p>
+            </div>
         </div>
-        <SettingsModal :is-open="modalOpen" @close="closeModal"/>
-        <PageFooter />
     </div>
+    <SettingsModal :is-open="modalOpen" @close="closeModal"/>
+    <PageFooter />
 </template>
