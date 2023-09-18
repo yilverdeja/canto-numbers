@@ -143,9 +143,6 @@ onBeforeMount(() => {
             minMinute: ("minMinute" in query.value && !Number.isNaN(Number(query.value.minMinute)) && Number(query.value.minMinute) >= 0 && Number(query.value.minMinute) <= 59) ? Number(query.value.minMinute) : 0
         }
 
-        console.log("maxMinute" in query.value, Number(query.value.maxMinute), Number(query.value.maxMinute) >= 0, Number(query.value.maxMinute) <= 59)
-        console.log(options.value)
-
         // TODO make sure max >= min
         
     } else if (playType == "money") {

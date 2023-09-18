@@ -176,7 +176,6 @@ const check = (event: Event) => {
 
 const generateNewValue = () => {
     currValue.value = generateRandom()
-    console.log(currValue.value)
     currValueIds.value = generateAudioIds(currValue.value)
     generateRomanizedText(currValueIds.value)
 }
@@ -218,7 +217,7 @@ defineExpose({generateNewValue, getRomanizedText, play, focusInput, submit, stop
 
 <template>
     <div>
-        <input ref="guessInput" v-model="cantoinput" class="text-5xl sm:text-8xl text-center w-full [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none caret-transparent" type="text" placeholder="input" autofocus @keyup.enter="submit" @input="check"/>
+        <input ref="guessInput" v-model="cantoinput" class="text-5xl sm:text-8xl text-center w-full [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" type="text" autofocus @keyup.enter="submit" @input="check"/>
         <div v-if="errorMsg != ''" class="text-[#ee2200]">{{ errorMsg }}</div>
     </div>
 </template>

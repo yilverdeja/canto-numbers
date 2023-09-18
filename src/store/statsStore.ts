@@ -22,7 +22,6 @@ export const useStatsStore = defineStore('stats', {
                 end_at: end_at
             }
             this.sessions.push(session)
-            console.log(this.sessions)
             localStorage.setItem("sessions", JSON.stringify(this.sessions))
         },
         removeSessionAtIndex(index: number) {
