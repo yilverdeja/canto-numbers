@@ -224,7 +224,7 @@ const handleResponse = (isCorrect: boolean, value: string) => {
             <div class="grid grid-cols-3 gap-3 w-full py-4">
                 <button class="text-xl md:text-2xl font-light text-center py-4 bg-slate-100 hover:bg-slate-200 rounded-md" @click="submit">Submit</button>
                 <button class="text-xl md:text-2xl font-light text-center py-4 bg-slate-100 hover:bg-slate-200 rounded-md" @click="repeatAudio">Repeat</button>
-                <button class="text-xl md:text-2xl font-light text-center py-4 bg-slate-100 hover:bg-slate-200 rounded-md" @click="pause">Stop</button>
+                <button class="text-xl md:text-2xl font-light text-center py-4 bg-slate-100 hover:bg-slate-200 rounded-md" @click="pause">End</button>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-3 text-xl md:text-2xl font-light text-center items-center border-t-4 pt-8">
                 <p class="py-1 md:py-0"><span class="font-medium">correct:</span> {{ correct.length }}</p>
