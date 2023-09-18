@@ -100,11 +100,6 @@ const modalOpen = ref(false)
         <div class="text-left md:text-center py-4 md:py-2 mb-2">
             <h1 class="text-5xl md:text-6xl my-4">{{ categoryType.title }}</h1>
             <h2 class="text-xl md:text-2xl font-light mb-2">{{ categoryType.description }}</h2>
-            <div class="font-regular text-xl">
-                <a class="hover:text-blue-400 hover:underline cursor-pointer" @click="toStats">See Stats</a>
-                <p class="inline-block mx-2 select-none">|</p>
-                <a class="hover:text-blue-400 hover:underline cursor-pointer" @click="toCategories">Other Categories</a>
-            </div>
         </div>
 
         <!-- functions -->
