@@ -130,9 +130,10 @@ const modalOpen = ref(false)
                 <h3 class="text-xl font-bold mb-2">Practice & Learn</h3>
                 <div class="grid grid-cols-2 gap-2">
                     <button class="text-xl font-light my-4 px-8 py-2 bg-slate-100 hover:bg-slate-200 rounded-md" @click="practice">Practice</button>
-                    <button class="text-xl font-light ml-4 my-4 px-8 py-2 bg-slate-100 hover:bg-slate-200 rounded-md disabled:hover:bg-slate-100" @click="learn" disabled>Learn</button>
+                    <button class="text-xl font-light ml-4 my-4 px-8 py-2 bg-slate-100 hover:bg-slate-200 rounded-md disabled:hover:bg-slate-100 relative" disabled @click="learn">Learn
+                        <div class="rounded-md absolute inset-0 flex items-center justify-center bg-gray-900 bg-opacity-40 text-white text-xl font-bold opacity-100 transition duration-300 cursor-default select-none">Coming Soon</div>
+                    </button>
                 </div>
-                <small class="font-light">Learn page is coming soon...</small>
             </div>
 
         </div>
