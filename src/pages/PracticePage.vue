@@ -107,14 +107,13 @@ const isTraditional = ref(false)
 				<!-- instructions -->
 				<div class="text-xl md:text-2xl font-light">
 					<p class="py-2">Type in a valid input to see what it sounds like</p>
-					<!-- <p class="py-2 text-center md:text-left"><span class="font-medium">Min: </span>0 & <span class="font-medium">Max: </span>999999999999</p> -->
 					<div class="text-center">
                         <RequestInput ref="childRef" :input-category="playType" :show-jyutping="isJyutping" :show-traditional="isTraditional" :show-yale="isYale"/>
 					</div>
 				</div>
                 <div class="flex flex-col md:flex-row text-center justify-center">
                     <button class="text-xl md:text-2xl font-light my-4 px-8 py-2 bg-slate-100 hover:bg-slate-200 rounded-md" @click="submit">submit</button>
-					<button class="text-xl md:text-2xl font-light md:ml-4 my-4 px-8 py-2 bg-slate-100 hover:bg-slate-200 rounded-md" @click="home">home</button>
+					<button class="text-xl md:text-2xl font-light md:ml-4 my-4 px-8 py-2 bg-slate-100 hover:bg-slate-200 rounded-md" @click="home">back</button>
                 </div>
             </div>
         </div>

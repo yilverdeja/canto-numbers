@@ -3,6 +3,7 @@ import HomePage from '@/pages/HomePage.vue'
 import StatsPage from '@/pages/StatsPage.vue'
 import PlayPage from '@/pages/PlayPage.vue'
 import PracticePage from '@/pages/PracticePage.vue'
+import CategoriesPage from '@/pages/CategoriesPage.vue'
 import TypeHome from '@/pages/TypeHome.vue'
 import NotFound from '@/pages/NotFound.vue'
 
@@ -13,6 +14,14 @@ const routes = [
     component: HomePage,
     meta: {
       title: 'Canto Numbers'
+    }
+  },
+  {
+    path: '/categories',
+    name: "categories",
+    component: CategoriesPage,
+    meta: {
+      title: 'Canto Numbers Categories'
     }
   },
   {
