@@ -94,51 +94,49 @@ const modalOpen = ref(false)
 </script>
 
 <template>
-    <div class="flex flex-col h-screen">
-        <PageHeader />
-        <div class="max-w-[85rem] w-full mx-auto px-4 h-full flex flex-col py-4 sm:py-10">
-            <!-- title -->
-            <div class="text-left md:text-center py-4 md:py-2 mb-2">
-                <h1 class="text-5xl md:text-6xl my-4">{{ categoryType.title }}</h1>
-                <h2 class="text-xl md:text-2xl font-light mb-2">{{ categoryType.description }}</h2>
-                <div class="font-regular text-xl">
-                    <a class="hover:text-blue-400 hover:underline cursor-pointer" @click="toStats">See Stats</a>
-                    <p class="inline-block mx-2 select-none">|</p>
-                    <a class="hover:text-blue-400 hover:underline cursor-pointer" @click="toCategories">Other Categories</a>
-                </div>
-            </div>
-
-            <!-- functions -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:p-4">
-
-                <!-- play session -->
-                <div class="border-2 rounded-md border-gray-500 border-dashed p-4">
-                    <h3 class="text-xl font-bold mb-2">Play Session</h3>
-                    
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                        <select v-model="selected" class="text-xl md:text-2xl font-light rounded-md bg-slate-100 hover:bg-slate-200 border-none px-8 py-2 appearance-none max-h-12">
-                            <option v-for="option in options" :key="option.value" :value="option.value">{{ option.text }}</option>
-                        </select>
-                    <div>
-                        <p v-for="(val, key) in getSessionOptions()" :key="key" class="inline-block after:ml-2">{{ key }}: {{ val }}</p>
-                    </div>
-                    <button class="text-xl font-light px-8 py-2 bg-slate-100 hover:bg-slate-200 rounded-md" @click="start">Start</button>
-                    </div>
-                </div>
-
-                <!-- practice & learn -->
-                <div class="border-2 rounded-md border-gray-500 border-dashed p-4">
-                    <h3 class="text-xl font-bold mb-2">Practice & Learn</h3>
-                    <div class="grid grid-cols-2 gap-2">
-                        <button class="text-xl font-light my-4 px-8 py-2 bg-slate-100 hover:bg-slate-200 rounded-md" @click="practice">Practice</button>
-                        <button class="text-xl font-light ml-4 my-4 px-8 py-2 bg-slate-100 hover:bg-slate-200 rounded-md disabled:hover:bg-slate-100" @click="learn" disabled>Learn</button>
-                    </div>
-                    <small class="font-light">Learn page is coming soon...</small>
-                </div>
-
+    <PageHeader />
+    <div class="max-w-[85rem] w-full mx-auto px-4 h-full flex flex-col py-4 sm:py-10">
+        <!-- title -->
+        <div class="text-left md:text-center py-4 md:py-2 mb-2">
+            <h1 class="text-5xl md:text-6xl my-4">{{ categoryType.title }}</h1>
+            <h2 class="text-xl md:text-2xl font-light mb-2">{{ categoryType.description }}</h2>
+            <div class="font-regular text-xl">
+                <a class="hover:text-blue-400 hover:underline cursor-pointer" @click="toStats">See Stats</a>
+                <p class="inline-block mx-2 select-none">|</p>
+                <a class="hover:text-blue-400 hover:underline cursor-pointer" @click="toCategories">Other Categories</a>
             </div>
         </div>
-        <SettingsModal :is-open="modalOpen" @close="modalOpen = false"/>
-        <PageFooter />
+
+        <!-- functions -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:p-4">
+
+            <!-- play session -->
+            <div class="border-2 rounded-md border-gray-500 border-dashed p-4">
+                <h3 class="text-xl font-bold mb-2">Play Session</h3>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <select v-model="selected" class="text-xl md:text-2xl font-light rounded-md bg-slate-100 hover:bg-slate-200 border-none px-8 py-2 appearance-none max-h-12">
+                        <option v-for="option in options" :key="option.value" :value="option.value">{{ option.text }}</option>
+                    </select>
+                <div>
+                    <p v-for="(val, key) in getSessionOptions()" :key="key" class="inline-block after:ml-2">{{ key }}: {{ val }}</p>
+                </div>
+                <button class="text-xl font-light px-8 py-2 bg-slate-100 hover:bg-slate-200 rounded-md" @click="start">Start</button>
+                </div>
+            </div>
+
+            <!-- practice & learn -->
+            <div class="border-2 rounded-md border-gray-500 border-dashed p-4">
+                <h3 class="text-xl font-bold mb-2">Practice & Learn</h3>
+                <div class="grid grid-cols-2 gap-2">
+                    <button class="text-xl font-light my-4 px-8 py-2 bg-slate-100 hover:bg-slate-200 rounded-md" @click="practice">Practice</button>
+                    <button class="text-xl font-light ml-4 my-4 px-8 py-2 bg-slate-100 hover:bg-slate-200 rounded-md disabled:hover:bg-slate-100" @click="learn" disabled>Learn</button>
+                </div>
+                <small class="font-light">Learn page is coming soon...</small>
+            </div>
+
+        </div>
     </div>
+    <SettingsModal :is-open="modalOpen" @close="modalOpen = false"/>
+    <PageFooter />
 </template>

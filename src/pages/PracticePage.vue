@@ -98,26 +98,24 @@ const isTraditional = ref(false)
 </script>
 
 <template>
-    <div class="flex flex-col h-screen">
-        <PageHeader />
-		<div ref="gameArea" class="max-w-[85rem] w-full mx-auto px-4 h-full flex flex-col py-4 sm:py-10">
+    <PageHeader />
+    <div ref="gameArea" class="max-w-[85rem] w-full mx-auto px-4 h-full flex flex-col py-4 sm:py-10">
+        <!-- instructions -->
+        <div>
+            <h1 class="text-5xl md:text-6xl py-4">Practice {{ playType.charAt(0).toUpperCase() + playType.slice(1) }}</h1>
             <!-- instructions -->
-            <div>
-                <h1 class="text-5xl md:text-6xl py-4">Practice {{ playType.charAt(0).toUpperCase() + playType.slice(1) }}</h1>
-				<!-- instructions -->
-				<div class="text-xl md:text-2xl font-light">
-					<p class="py-2">Type in a valid input to see what it sounds like</p>
-					<div class="text-center">
-                        <RequestInput ref="childRef" :input-category="playType" :show-jyutping="isJyutping" :show-traditional="isTraditional" :show-yale="isYale"/>
-					</div>
-				</div>
-                <div class="flex flex-col md:flex-row text-center justify-center">
-                    <button class="text-xl md:text-2xl font-light my-4 px-8 py-2 bg-slate-100 hover:bg-slate-200 rounded-md" @click="submit">submit</button>
-					<button class="text-xl md:text-2xl font-light md:ml-4 my-4 px-8 py-2 bg-slate-100 hover:bg-slate-200 rounded-md" @click="home">back</button>
+            <div class="text-xl md:text-2xl font-light">
+                <p class="py-2">Type in a valid input to see what it sounds like</p>
+                <div class="text-center">
+                    <RequestInput ref="childRef" :input-category="playType" :show-jyutping="isJyutping" :show-traditional="isTraditional" :show-yale="isYale"/>
                 </div>
             </div>
+            <div class="flex flex-col md:flex-row text-center justify-center">
+                <button class="text-xl md:text-2xl font-light my-4 px-8 py-2 bg-slate-100 hover:bg-slate-200 rounded-md" @click="submit">submit</button>
+                <button class="text-xl md:text-2xl font-light md:ml-4 my-4 px-8 py-2 bg-slate-100 hover:bg-slate-200 rounded-md" @click="home">back</button>
+            </div>
         </div>
-        <SettingsModal :is-open="modalOpen" @close="closeModal"/>
-        <PageFooter />
     </div>
+    <SettingsModal :is-open="modalOpen" @close="closeModal"/>
+    <PageFooter />
 </template>

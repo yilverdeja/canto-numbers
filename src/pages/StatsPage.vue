@@ -48,36 +48,34 @@ const closeModal = () => {
 </script>
 
 <template>
-    <div class="flex flex-col h-screen">
-        <PageHeader />
-		<div ref="gameArea" class="max-w-[85rem] w-full mx-auto px-4 h-full flex flex-col py-4 sm:py-10">
-            <div class="flex flex-row justify-between">
-                <h1 class="text-5xl md:text-6xl py-4">Stats</h1>
-                <div>
-                    <button class="text-xl md:text-2xl font-light md:ml-4 my-4 px-8 py-2 bg-slate-100 hover:bg-slate-200 rounded-md" @click="reset">reset</button>
-                </div>
+    <PageHeader />
+    <div ref="gameArea" class="max-w-[85rem] w-full mx-auto px-4 h-full flex flex-col py-4 sm:py-10">
+        <div class="flex flex-row justify-between">
+            <h1 class="text-5xl md:text-6xl py-4">Stats</h1>
+            <div>
+                <button class="text-xl md:text-2xl font-light md:ml-4 my-4 px-8 py-2 bg-slate-100 hover:bg-slate-200 rounded-md" @click="reset">reset</button>
             </div>
-            <p class="py-2 text-xl md:text-2xl font-light">View all sessions below</p>
-            <div v-if="sessions.length > 0" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                <div v-for="session of sessions" :key="session" class="text-xl font-light rounded-md shadow-xl bg-slate-100 p-2">
-                    <p class="font-medium">{{ session.type }}</p>
-                    <div class="flex flex-row">
-                        <div v-for="option in Object.keys(session.options)" :key="option" class="pr-1">
-                            <p><span class="font-medium">{{ option }}: </span>{{ session.options[option] }}</p>
-                        </div>
-                    </div>
-                    <div class="flex flex-row">
-                        <p class="pr-1"><span class="font-medium">correct: </span>{{ session.correct.length }}</p>
-                        <p class="pr-1"><span class="font-medium">missed: </span>{{ session.missed.length }}</p>
-                        <p class="pr-1"><span class="font-medium">total: </span>{{ session.total }}</p>
-                    </div>
-                    <p><span class="font-medium">date: </span>{{ new Date(session.start_at).toLocaleString('en-us', { year:"numeric", month:"short", day:"numeric", hour:"numeric", minute: "numeric" }) }}</p>
-                    <p class="pr-1"><span class="font-medium">duration: </span>{{ ((new Date(session.end_at).getTime() - new Date(session.start_at).getTime())/1000).toFixed(2)}}s</p>
-                </div>
-            </div>
-            <p v-else class="py-2 text-lg md:text-xl font-light">No session data available</p>
         </div>
-        <SettingsModal :is-open="modalOpen" @close="closeModal"/>
-        <PageFooter />
+        <p class="py-2 text-xl md:text-2xl font-light">View all sessions below</p>
+        <div v-if="sessions.length > 0" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            <div v-for="session of sessions" :key="session" class="text-xl font-light rounded-md shadow-xl bg-slate-100 p-2 overflow-hidden">
+                <p class="font-medium">{{ session.type }}</p>
+                <div class="flex flex-row">
+                    <div v-for="option in Object.keys(session.options)" :key="option" class="pr-1">
+                        <p><span class="font-medium">{{ option }}: </span>{{ session.options[option] }}</p>
+                    </div>
+                </div>
+                <div class="flex flex-row">
+                    <p class="pr-1"><span class="font-medium">correct: </span>{{ session.correct.length }}</p>
+                    <p class="pr-1"><span class="font-medium">missed: </span>{{ session.missed.length }}</p>
+                    <p class="pr-1"><span class="font-medium">total: </span>{{ session.total }}</p>
+                </div>
+                <p><span class="font-medium">date: </span>{{ new Date(session.start_at).toLocaleString('en-us', { year:"numeric", month:"short", day:"numeric", hour:"numeric", minute: "numeric" }) }}</p>
+                <p class="pr-1"><span class="font-medium">duration: </span>{{ ((new Date(session.end_at).getTime() - new Date(session.start_at).getTime())/1000).toFixed(2)}}s</p>
+            </div>
+        </div>
+        <p v-else class="py-2 text-lg md:text-xl font-light">No session data available</p>
     </div>
+    <SettingsModal :is-open="modalOpen" @close="closeModal"/>
+    <PageFooter />
 </template>
