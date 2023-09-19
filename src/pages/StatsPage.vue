@@ -45,11 +45,16 @@ const closeModal = () => {
     }
 }
 
+// TODO not recommended to create a new date in the sorting function
+const sortSessions = (a, b) => {
+    return (new Date(b.start_at) - new Date(a.start_at))
+}
+
 </script>
 
 <template>
     <PageHeader />
-    <div ref="gameArea" class="max-w-[85rem] w-full mx-auto px-4 h-full flex flex-col py-4 sm:py-10">
+    <div class="max-w-[85rem] w-full mx-auto px-4 h-full flex flex-col py-4 sm:py-10">
         <div class="flex flex-row justify-between">
             <h1 class="text-5xl md:text-6xl py-4">Stats</h1>
             <div>
@@ -58,21 +63,7 @@ const closeModal = () => {
         </div>
         <p class="py-2 text-xl md:text-2xl font-light">View all sessions below</p>
         <div v-if="sessions.length > 0" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            <div v-for="session of sessions" :key="session" class="text-xl font-light rounded-md shadow-xl bg-slate-100 p-2 overflow-hidden">
-                <p class="font-medium">{{ session.type }}</p>
-                <div class="flex flex-row">
-                    <div v-for="option in Object.keys(session.options)" :key="option" class="pr-1">
-                        <p><span class="font-medium">{{ option }}: </span>{{ session.options[option] }}</p>
-                    </div>
-                </div>
-                <div class="flex flex-row">
-                    <p class="pr-1"><span class="font-medium">correct: </span>{{ session.correct.length }}</p>
-                    <p class="pr-1"><span class="font-medium">missed: </span>{{ session.missed.length }}</p>
-                    <p class="pr-1"><span class="font-medium">total: </span>{{ session.total }}</p>
-                </div>
-                <p><span class="font-medium">date: </span>{{ new Date(session.start_at).toLocaleString('en-us', { year:"numeric", month:"short", day:"numeric", hour:"numeric", minute: "numeric" }) }}</p>
-                <p class="pr-1"><span class="font-medium">duration: </span>{{ ((new Date(session.end_at).getTime() - new Date(session.start_at).getTime())/1000).toFixed(2)}}s</p>
-            </div>
+            <StatsCard v-for="session of sessions.sort(sortSessions)" :key="session" :session="session"/>
         </div>
         <p v-else class="py-2 text-lg md:text-xl font-light">No session data available</p>
     </div>

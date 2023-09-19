@@ -10,7 +10,9 @@ export function useTime() {
                 newIds.push("10")
             }
             if (digits[1] != "0") {
-                newIds.push(digits[1])
+                // 2:00 should use loeng5 
+                if (digits[0] == "0" && digits[1] == "2") newIds.push("two")
+                else newIds.push(digits[1])
             }
             newIds.push(":") // digits[2]
     
