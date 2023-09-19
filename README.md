@@ -12,10 +12,14 @@ Canto Numbers is an open-source game designed to help users learn how to disting
 
 Canto Numbers currently offers the following features:
 
-- Guess numbers from 0-1000 with hints.
-- Guess time in a 12-hour format from 1:00-12:59 with hints.
-- Generate numbers audio from 0-999,999,999,999 with the selected text type.
-- Generate time audio from 1:00 to 12:59 with the selected text type.
+- Guess Categories with hints
+  - Numbers from 0 to 1000
+  - Time in 12-hour format from 1:00 to 12:59
+  - Multiple Digits
+- Generate Category Audio with text
+  - Numbers from 0 to 999,999,999,999
+  - Time from 1:00 to 12:59
+  - Single to Multiple Digits
 - Keep track of your correct and missed guesses with a counter score, which is saved on your local host.
 - See simple session stats within the stats page
 - Requires sound to listen to the audio.
@@ -34,7 +38,7 @@ Future implementations:
   - [x] integers
   - [x] time
   - [ ] money (decimals)
-  - [ ] digits
+  - [x] digits
   - [ ] dates
   - [ ] math
 - [ ] Create game settings for more personalized approach
