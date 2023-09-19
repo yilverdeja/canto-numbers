@@ -20,7 +20,7 @@ const { theme } = storeToRefs(themeStore)
                     <img src="@/assets/canto-numbers.svg" width="25" class="mr-1"/>
                     <h1 class="font-medium text-2xl cursor-pointer" @click="$router.push('/')">CantoNumbers</h1>
                 </div>
-                <div className="absolute sm:hidden right-6 p-2 inline-flex justify-center items-center gap-2 text-white align-middle cursor-pointer text-black" @click="toggleNav()">
+                <div className="absolute sm:hidden right-6 p-2 inline-flex justify-center items-center gap-2 align-middle cursor-pointer text-black" @click="toggleNav()">
                     <span :className="`${open ? 'i-mdi-close' : 'i-mdi-menu'} `" :style="{ fontSize: '24px' }"></span>
                 </div>
             </div>
