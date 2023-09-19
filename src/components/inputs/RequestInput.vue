@@ -9,6 +9,7 @@ import { useDataObjects } from '@/composables/useDataObjects'
 import { usePlaySequence } from '@/composables/usePlaySequence'
 import { useIntegers } from '@/composables/useIntegers'
 import { useTime } from '@/composables/useTime'
+import { useDigits } from '@/composables/useDigits'
 
 const cantoinput = ref("")
 const romanizedText = ref({})
@@ -21,6 +22,7 @@ const { stopSequence: stopIntegerSequence, playSequence: playIntegerSequence } =
 const { stopSequence: stopTimeSequence, playSequence: playTimeSequence } = usePlaySequence({sfx: timeSfx, spriteMap: timeObj.spriteMap})
 const { generateIntegerIds, checkIntegers , validateIntegers } = useIntegers()
 const { generateTimeIds, checkTime , validateTime } = useTime()
+const { generateDigitsIds, checkDigits , validateDigits , generateRandomDigits } = useDigits()
 
 const generateAudioIds = (numValue: string) => {
 
@@ -32,6 +34,8 @@ const generateAudioIds = (numValue: string) => {
 
     } else if (props.inputCategory == "money") {
         // TODO
+    } else if (props.inputCategory == "digits") {
+        return generateDigitsIds(numValue)
     }
 
     return []
@@ -80,6 +84,8 @@ const generateRomanizedText = (ids: Array<String>) => {
         romanizedText.value = grt(ids, timeObj)
     } else if (props.inputCategory == "money") {
         // TODO
+    } else if (props.inputCategory == "digits") {
+        romanizedText.value = grt(ids, integersObj)
     }
 }
 
@@ -105,6 +111,8 @@ const play = (ids: Array<String>) => {
         playTimeSequence(ids)
     } else if (props.inputCategory == "money") {
         // TODO
+    } else if (props.inputCategory == "digits") {
+        playIntegerSequence(ids)
     }
 }
 
@@ -121,6 +129,10 @@ const validateInput = () => {
 
     } else if (props.inputCategory == "money") {
         // TODO
+    } else if (props.inputCategory == "digits") {
+        const {validation, errorMessage } = validateDigits(inputVal)
+        if (validation.value) return inputVal
+        else errorMsg.value = errorMessage.value
     }
 
     return null
@@ -146,6 +158,8 @@ const check = (event: Event) => {
             allowed.value = checkTime(event.data, cantoinput.value)
         } else if (props.inputCategory == "money") {
             // TODO
+        } else if (props.inputCategory == "digits") {
+            allowed.value = checkDigits(event.data)
         }
 
         if (!allowed.value) {
@@ -172,6 +186,8 @@ const stopSequence = () => {
         stopTimeSequence()
     } else if (props.inputCategory == "money") {
         // TODO
+    } else if (props.inputCategory == "digits") {
+        stopIntegerSequence()
     }
 }
 

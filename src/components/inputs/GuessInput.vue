@@ -3,6 +3,7 @@ import { useDataObjects } from '@/composables/useDataObjects'
 import { usePlaySequence } from '@/composables/usePlaySequence'
 import { useIntegers } from '@/composables/useIntegers'
 import { useTime } from '@/composables/useTime'
+import { useDigits } from '@/composables/useDigits'
 
 import numbersJson from "@/assets/data/numbers.json"
 import numbersSfx from "@/assets/data/numbers.mp3"
@@ -21,6 +22,7 @@ const { stopSequence: stopIntegerSequence, playSequence: playIntegerSequence } =
 const { stopSequence: stopTimeSequence, playSequence: playTimeSequence } = usePlaySequence({sfx: timeSfx, spriteMap: timeObj.spriteMap})
 const { generateIntegerIds, checkIntegers , validateIntegers, generateRandomInteger } = useIntegers()
 const { generateTimeIds, checkTime , validateTime, generateRandomTime } = useTime()
+const { generateDigitsIds, checkDigits , validateDigits , generateRandomDigits } = useDigits()
 
 const generateRandom = () => {
     if (props.inputCategory == "integers") {
@@ -32,6 +34,8 @@ const generateRandom = () => {
     } else if (props.inputCategory == "money") {
         return (1.5).toString() // TODO
 
+    } else if (props.inputCategory == "digits") {
+        return generateRandomDigits(props.options)
     }
 }
 
@@ -45,6 +49,8 @@ const generateAudioIds = (numValue: string) => {
 
     } else if (props.inputCategory == "money") {
         // TODO
+    } else if (props.inputCategory == "digits") {
+        return generateDigitsIds(numValue)
     }
 
     return []
@@ -71,7 +77,7 @@ const props = defineProps({
         type: String,
         default: "integers",
         validator(value: string) {
-            return ["integers", "time", "money"].includes(value)
+            return ["integers", "time", "money", "digits"].includes(value)
         },
         required: true
     },
@@ -101,6 +107,8 @@ const generateRomanizedText = (ids: Array<String>) => {
         romanizedText.value = grt(ids, timeObj)
     } else if (props.inputCategory == "money") {
         // TODO
+    } else if (props.inputCategory == "digits") {
+        romanizedText.value = grt(ids, integersObj)
     }
 }
 
@@ -120,6 +128,8 @@ const play = () => {
         playTimeSequence(currValueIds.value)
     } else if (props.inputCategory == "money") {
         // TODO
+    } else if (props.inputCategory == "digits") {
+        playIntegerSequence(currValueIds.value)
     }
 }
 
@@ -136,6 +146,10 @@ const validateInput = () => {
 
     } else if (props.inputCategory == "money") {
         // TODO
+    } else if (props.inputCategory == "digits") {
+        const {validation, errorMessage } = validateDigits(inputVal)
+        if (validation.value) return inputVal
+        else errorMsg.value = errorMessage.value
     }
 
     return null
@@ -162,6 +176,8 @@ const check = (event: Event) => {
             allowed.value = checkTime(event.data, cantoinput.value)
         } else if (props.inputCategory == "money") {
             allowed.value = Number.isInteger(parseInt(event.data)) || event.data == "."
+        } else if (props.inputCategory == "digits") {
+            allowed.value = checkDigits(event.data, cantoinput.value)
         }
 
         if (!allowed.value) {
@@ -208,6 +224,8 @@ const stopSequence = () => {
         stopTimeSequence()
     } else if (props.inputCategory == "money") {
         // TODO
+    } else if (props.inputCategory == "digits") {
+        stopIntegerSequence()
     }
 }
 

@@ -70,14 +70,6 @@ const learn = () => {
     router.push(`/${type}/learn`)
 }
 
-const toStats = () => {
-    router.push("/stats")
-}
-
-const toCategories = () => {
-    router.push("/categories")
-}
-
 /* MOUNT & DEMOUNT */
 onMounted(() => {
     window.addEventListener("keypress", handleKeyPresses)

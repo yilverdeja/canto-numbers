@@ -58,8 +58,25 @@
         "title": "Digits",
         "description": "Identify individual digits spoken consecutively, just like years or phone numbers. Enhance your digit recognition skills in Cantonese",
         "url": "/digits",
-        "published": false,
-        "image": "/img/digits.png"
+        "published": true,
+        "image": "/img/digits.png",
+        "sessions": [
+            {
+                "name": "3 digits",
+                "value": "easy",
+                "options": {"minDigits": 3, "maxDigits": 3}
+            },
+            {
+                "name": "years",
+                "value": "medium",
+                "options": {"minRange": 1950, "maxRange": 2050}
+            },
+            {
+                "name": "5 to 7 digits",
+                "value": "hard",
+                "options": {"minDigits": 5, "maxDigits": 7}
+            }
+        ]
     },
     {
         "title": "Dates",

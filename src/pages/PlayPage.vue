@@ -147,6 +147,14 @@ onBeforeMount(() => {
         
     } else if (playType == "money") {
         // TODO
+    } else if (playType == "digits") {
+        if ("minRange" in query.value && !Number.isNaN(Number(query.value.minRange)) && Number(query.value.minRange) >= 0) options.value["minRange"] = Number(query.value.minRange)
+        if ("maxRange" in query.value && !Number.isNaN(Number(query.value.maxRange)) && Number(query.value.maxRange) >= 0) options.value["maxRange"] = Number(query.value.maxRange)
+        if ("minDigits" in query.value && !Number.isNaN(Number(query.value.minDigits)) && Number(query.value.minDigits) > 0) options.value["minDigits"] = Number(query.value.minDigits)
+        if ("maxDigits" in query.value && !Number.isNaN(Number(query.value.maxDigits)) && Number(query.value.maxDigits) > 0) options.value["maxDigits"] = Number(query.value.maxDigits)
+
+        // TODO make sure max >= min
+
     }
 })
 
