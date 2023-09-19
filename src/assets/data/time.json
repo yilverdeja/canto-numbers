@@ -96,5 +96,26 @@
         "yale": "bun",
         "traditional": "半",
         "sprite": [15327, 314]
+    },
+    {
+        "number": "two",
+        "jyutping": "loeng5",
+        "yale": "léuhng",
+        "traditional": "兩",
+        "sprite": [16536, 403]
+    },
+    {
+        "number": "_",
+        "jyutping": "daap3",
+        "yale": "daap",
+        "traditional": "搭",
+        "sprite": [17780, 254]
+    },
+    {
+        "number": "clock",
+        "jyutping": "zung1",
+        "yale": "jūng",
+        "traditional": "鐘",
+        "sprite": [18884, 381]
     }
 ]
