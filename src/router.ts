@@ -41,11 +41,26 @@ const routes = [
     }
   },
   {
+    path: '/digits',
+    name: "digits",
+    component: TypeHome,
+    meta: {
+      title: 'Canto Digits'
+    }
+  },
+  {
     path: '/integers/play',
     name: "playintegers",
     component: PlayPage,
     meta: {
       title: 'Play Canto Integers',
+    },
+  },
+  {
+    path: '/integers/practice',
+    component: PracticePage,
+    meta: {
+      title: 'Practice Canto Numbers',
     },
   },
   {
@@ -57,17 +72,25 @@ const routes = [
     },
   },
   {
-    path: '/integers/practice',
+    path: '/time/practice',
     component: PracticePage,
     meta: {
       title: 'Practice Canto Numbers',
     },
   },
   {
-    path: '/time/practice',
+    path: '/digits/play',
+    name: "playdigits",
+    component: PlayPage,
+    meta: {
+      title: 'Play Canto Digits',
+    },
+  },
+  {
+    path: '/digits/practice',
     component: PracticePage,
     meta: {
-      title: 'Practice Canto Numbers',
+      title: 'Practice Canto Digits',
     },
   },
   {
