@@ -51,8 +51,25 @@
         "title": "Money",
         "description": "Count money with precision in Cantonese. Whether it's dollars or cents, master currency values with up to two decimal places",
         "url": "/money",
-        "published": false,
-        "image": "/img/money.png"
+        "published": true,
+        "image": "/img/money.png",
+        "sessions": [
+            {
+                "name": "cents",
+                "value": "easy",
+                "options": {"min": 0.01, "max": 0.09}
+            },
+            {
+                "name": "0.10-0.99",
+                "value": "medium",
+                "options": {"min": 0.10, "max": 0.99}
+            },
+            {
+                "name": "dollars & cents",
+                "value": "hard",
+                "options": {"min": 1, "max": 1000}
+            }
+        ]
     },
     {
         "title": "Digits",

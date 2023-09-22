@@ -33,22 +33,6 @@ const routes = [
     }
   },
   {
-    path: '/time',
-    name: "time",
-    component: TypeHome,
-    meta: {
-      title: 'Canto Time'
-    }
-  },
-  {
-    path: '/digits',
-    name: "digits",
-    component: TypeHome,
-    meta: {
-      title: 'Canto Digits'
-    }
-  },
-  {
     path: '/integers/play',
     name: "playintegers",
     component: PlayPage,
@@ -62,6 +46,14 @@ const routes = [
     meta: {
       title: 'Practice Canto Numbers',
     },
+  },
+  {
+    path: '/time',
+    name: "time",
+    component: TypeHome,
+    meta: {
+      title: 'Canto Time'
+    }
   },
   {
     path: '/time/play',
@@ -79,6 +71,14 @@ const routes = [
     },
   },
   {
+    path: '/digits',
+    name: "digits",
+    component: TypeHome,
+    meta: {
+      title: 'Canto Digits'
+    }
+  },
+  {
     path: '/digits/play',
     name: "playdigits",
     component: PlayPage,
@@ -91,6 +91,29 @@ const routes = [
     component: PracticePage,
     meta: {
       title: 'Practice Canto Digits',
+    },
+  },
+  {
+    path: '/money',
+    name: "money",
+    component: TypeHome,
+    meta: {
+      title: 'Canto Money'
+    }
+  },
+  {
+    path: '/money/play',
+    name: "playmoney",
+    component: PlayPage,
+    meta: {
+      title: 'Play Canto Money',
+    },
+  },
+  {
+    path: '/money/practice',
+    component: PracticePage,
+    meta: {
+      title: 'Practice Canto Money',
     },
   },
   {

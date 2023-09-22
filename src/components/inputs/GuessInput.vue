@@ -3,6 +3,7 @@ import { useDataObjects } from '@/composables/useDataObjects'
 import { usePlaySequence } from '@/composables/usePlaySequence'
 import { useIntegers } from '@/composables/useIntegers'
 import { useTime } from '@/composables/useTime'
+import { useMoney } from '@/composables/useMoney'
 import { useDigits } from '@/composables/useDigits'
 
 import numbersJson from "@/assets/data/numbers.json"
@@ -22,6 +23,7 @@ const { stopSequence: stopIntegerSequence, playSequence: playIntegerSequence } =
 const { stopSequence: stopTimeSequence, playSequence: playTimeSequence } = usePlaySequence({sfx: timeSfx, spriteMap: timeObj.spriteMap})
 const { generateIntegerIds, checkIntegers , validateIntegers, generateRandomInteger } = useIntegers()
 const { generateTimeIds, checkTime , validateTime, generateRandomTime } = useTime()
+const { generateMoneyIds, checkMoney , validateMoney, generateRandomMoney } = useMoney()
 const { generateDigitsIds, checkDigits , validateDigits , generateRandomDigits } = useDigits()
 
 const generateRandom = () => {
@@ -32,7 +34,7 @@ const generateRandom = () => {
         return generateRandomTime(props.options)
 
     } else if (props.inputCategory == "money") {
-        return (1.5).toString() // TODO
+        return generateRandomMoney(props.options)
 
     } else if (props.inputCategory == "digits") {
         return generateRandomDigits(props.options)
@@ -48,9 +50,11 @@ const generateAudioIds = (numValue: string) => {
         return generateTimeIds(numValue)
 
     } else if (props.inputCategory == "money") {
-        // TODO
+        return generateMoneyIds(numValue)
+
     } else if (props.inputCategory == "digits") {
         return generateDigitsIds(numValue)
+
     }
 
     return []
@@ -106,7 +110,7 @@ const generateRomanizedText = (ids: Array<String>) => {
     } else if (props.inputCategory == "time") {
         romanizedText.value = grt(ids, timeObj)
     } else if (props.inputCategory == "money") {
-        // TODO
+        romanizedText.value = grt(ids, integersObj)
     } else if (props.inputCategory == "digits") {
         romanizedText.value = grt(ids, integersObj)
     }
@@ -127,7 +131,7 @@ const play = () => {
     } else if (props.inputCategory == "time") {
         playTimeSequence(currValueIds.value)
     } else if (props.inputCategory == "money") {
-        // TODO
+        playIntegerSequence(currValueIds.value)
     } else if (props.inputCategory == "digits") {
         playIntegerSequence(currValueIds.value)
     }
@@ -139,13 +143,17 @@ const validateInput = () => {
         const {validation, errorMessage } = validateIntegers(inputVal)
         if (validation.value) return inputVal
         else errorMsg.value = errorMessage.value
+
     } else if (props.inputCategory == "time") {
         const {validation, errorMessage } = validateTime(inputVal)
         if (validation.value) return inputVal.padStart(5, "0")
         else errorMsg.value = errorMessage.value
 
     } else if (props.inputCategory == "money") {
-        // TODO
+        const {validation, errorMessage } = validateMoney(inputVal)
+        if (validation.value) return inputVal
+        else errorMsg.value = errorMessage.value
+
     } else if (props.inputCategory == "digits") {
         const {validation, errorMessage } = validateDigits(inputVal)
         if (validation.value) return inputVal
@@ -175,7 +183,7 @@ const check = (event: Event) => {
         } else if (props.inputCategory == "time") {
             allowed.value = checkTime(event.data, cantoinput.value)
         } else if (props.inputCategory == "money") {
-            allowed.value = Number.isInteger(parseInt(event.data)) || event.data == "."
+            allowed.value = checkMoney(event.data, cantoinput.value)
         } else if (props.inputCategory == "digits") {
             allowed.value = checkDigits(event.data, cantoinput.value)
         }
@@ -223,7 +231,7 @@ const stopSequence = () => {
     } else if (props.inputCategory == "time") {
         stopTimeSequence()
     } else if (props.inputCategory == "money") {
-        // TODO
+        stopIntegerSequence()
     } else if (props.inputCategory == "digits") {
         stopIntegerSequence()
     }
