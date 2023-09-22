@@ -1,4 +1,4 @@
-import { countBy } from "lodash-es"
+import { countBy, indexOf } from "lodash-es"
 export function useMoney() {
 
     const splitDollarIds = (digits: Array<String>) => {
@@ -71,19 +71,27 @@ export function useMoney() {
     }
 
     const generateRandom = (options: {max: number, min: number}) => {
-        return ((Math.floor(Math.random() * (options.max - options.min + 1) + options.min)*100) / 100).toString()
+        console.log(options.max, options.min)
+        const randomVal = Math.random() * (options.max - options.min + 0.01) + options.min
+        const decimalVal = Math.floor(randomVal * 100) / 100
+        console.log(randomVal, decimalVal)
+        return decimalVal.toString()
     }
 
     const generateIds = (input: string) => {
         const newIds = []
         const digits = input.split("")
         const inputNumber = Number(input)
+        console.log("gen ids of", input)
         if (Number.isInteger(inputNumber)) {
+            console.log("is integer")
             newIds.push(...splitDollarIds(digits))
+            console.log(newIds)
             newIds.push("dollar")
 
         } else if (!Number.isNaN(inputNumber)) { // float
             const indexOfPoint = input.indexOf(".")
+            console.log("is float", indexOfPoint)
             if (inputNumber == 1.5) {
                 newIds.push("dollar")
                 newIds.push("half")
@@ -94,23 +102,24 @@ export function useMoney() {
             if (centDigits.length == 1) centDigits.push("0")
 
             if (inputNumber >= 1) { // dollars and cents
-                newIds.push(...splitDollarIds(digits.slice(0, indexOfPoint-1)))
+                console.log("dollars", digits.slice(0, indexOfPoint), "cents", centDigits, "all", digits)
+                newIds.push(...splitDollarIds(digits.slice(0, indexOfPoint)))
                 newIds.push("dollar")
                 newIds.push(...splitCentIds(centDigits))
 
             } else { // cents
-                
+                console.log("cents", centDigits)
                 if (centDigits[0] == "0") {
-                    newIds.push(centDigits[1] == "2" ? "two" : centDigits.slice(-1))
+                    newIds.push(centDigits[1] == "2" ? "two" : centDigits[1])
                     newIds.push("cent")
                 } else if (centDigits[1] == "0") {
-                    newIds.push(centDigits[0] == "2" ? "two" : centDigits.slice(-2))
+                    newIds.push(centDigits[0] == "2" ? "two" : centDigits[0])
                     newIds.push("dime")
                     newIds.push("whole-dime")
                 } else {
-                    newIds.push(centDigits[0] == "2" ? "two" : centDigits.slice(-2))
+                    newIds.push(centDigits[0] == "2" ? "two" : centDigits[0])
                     newIds.push("dime")
-                    newIds.push(centDigits[1] == "5" ? "half" : centDigits.slice(-1))
+                    newIds.push(centDigits[1] == "5" ? "half" : centDigits[1])
 
                 }
             }
@@ -118,13 +127,16 @@ export function useMoney() {
             console.log("cannot generate id's for input: ", input)
         }
 
+        if (newIds.findIndex(e => e == "dollar") > 0 && newIds[0] == "2" && newIds[1] != "10") {
+            newIds[0] = "two"
+        }
         return newIds
     }
 
     // TODO allow whole numbers and one decimal place (2 decimal places max)
     const checkInput = (character: string, input: string) => {
         // return Number.isInteger(parseInt(character))
-        return Number.isInteger(parseInt(character)) || (character == "." && countBy(input)["."] == 2) || (input.charAt(input.length-3) == ".")
+        return Number.isInteger(parseInt(character)) || (character == "." && countBy(input)["."] == 1) || (input.charAt(input.length-3) == ".")
     }
 
     const validateInput = (input: string) => {

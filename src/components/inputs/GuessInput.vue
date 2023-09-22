@@ -92,8 +92,13 @@ const props = defineProps({
 
 })
 
+// TODO money 1 is the same as 1.00 or 0.1 is the same as 0.10
 const submitGuess = (guessVal: string) => {
-    guessVal === currValue.value ? emit("response", true, currValue.value) : emit("response", false, currValue.value)
+    if (!Number.isNaN(Number(guessVal))) {
+        Number(guessVal) === Number(currValue.value) ? emit("response", true, currValue.value) : emit("response", false, currValue.value)
+    } else {
+        guessVal === currValue.value ? emit("response", true, currValue.value) : emit("response", false, currValue.value)
+    }
 }
 
 const clearRomanizedText = () => {
@@ -131,6 +136,7 @@ const play = () => {
     } else if (props.inputCategory == "time") {
         playTimeSequence(currValueIds.value)
     } else if (props.inputCategory == "money") {
+        console.log("money play", currValueIds.value)
         playIntegerSequence(currValueIds.value)
     } else if (props.inputCategory == "digits") {
         playIntegerSequence(currValueIds.value)
@@ -198,9 +204,14 @@ const check = (event: Event) => {
 
 }
 
+const currValue = ref("")
+const currValueIds = ref<Array<String>>([])
+
 const generateNewValue = () => {
     currValue.value = generateRandom()
+    console.log(currValue.value)
     currValueIds.value = generateAudioIds(currValue.value)
+    console.log(currValueIds.value)
     generateRomanizedText(currValueIds.value)
 }
 
@@ -209,11 +220,9 @@ const emit = defineEmits<{
     (e: "response", correct: boolean, value: string): void
 }>()
 
-const currValue = ref("")
-const currValueIds = ref<Array<String>>([])
-
 onMounted(() => {
     currValue.value = generateRandom()
+    console.log(currValue.value)
     currValueIds.value = generateAudioIds(currValue.value)
     generateRomanizedText(currValueIds.value)
 })
