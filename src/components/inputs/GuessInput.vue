@@ -3,7 +3,9 @@ import { useDataObjects } from '@/composables/useDataObjects'
 import { usePlaySequence } from '@/composables/usePlaySequence'
 import { useIntegers } from '@/composables/useIntegers'
 import { useTime } from '@/composables/useTime'
+import { useMoney } from '@/composables/useMoney'
 import { useDigits } from '@/composables/useDigits'
+import { useDates } from '@/composables/useDates'
 
 import numbersJson from "@/assets/data/numbers.json"
 import numbersSfx from "@/assets/data/numbers.mp3"
@@ -22,7 +24,9 @@ const { stopSequence: stopIntegerSequence, playSequence: playIntegerSequence } =
 const { stopSequence: stopTimeSequence, playSequence: playTimeSequence } = usePlaySequence({sfx: timeSfx, spriteMap: timeObj.spriteMap})
 const { generateIntegerIds, checkIntegers , validateIntegers, generateRandomInteger } = useIntegers()
 const { generateTimeIds, checkTime , validateTime, generateRandomTime } = useTime()
+const { generateMoneyIds, checkMoney , validateMoney, generateRandomMoney } = useMoney()
 const { generateDigitsIds, checkDigits , validateDigits , generateRandomDigits } = useDigits()
+const { generateDateIds, checkDate , validateDate , generateRandomDate } = useDates()
 
 const generateRandom = () => {
     if (props.inputCategory == "integers") {
@@ -32,10 +36,13 @@ const generateRandom = () => {
         return generateRandomTime(props.options)
 
     } else if (props.inputCategory == "money") {
-        return (1.5).toString() // TODO
+        return generateRandomMoney(props.options)
 
     } else if (props.inputCategory == "digits") {
         return generateRandomDigits(props.options)
+
+    } else if (props.inputCategory == "dates") {
+        return generateRandomDate(props.options)
     }
 }
 
@@ -48,9 +55,14 @@ const generateAudioIds = (numValue: string) => {
         return generateTimeIds(numValue)
 
     } else if (props.inputCategory == "money") {
-        // TODO
+        return generateMoneyIds(numValue)
+
     } else if (props.inputCategory == "digits") {
         return generateDigitsIds(numValue)
+
+    } else if (props.inputCategory == "dates") {
+        return generateDateIds(numValue)
+
     }
 
     return []
@@ -77,7 +89,7 @@ const props = defineProps({
         type: String,
         default: "integers",
         validator(value: string) {
-            return ["integers", "time", "money", "digits"].includes(value)
+            return ["integers", "time", "money", "digits", "dates"].includes(value)
         },
         required: true
     },
@@ -89,7 +101,11 @@ const props = defineProps({
 })
 
 const submitGuess = (guessVal: string) => {
-    guessVal === currValue.value ? emit("response", true, currValue.value) : emit("response", false, currValue.value)
+    if (!Number.isNaN(Number(guessVal))) {
+        Number(guessVal) === Number(currValue.value) ? emit("response", true, currValue.value) : emit("response", false, currValue.value)
+    } else {
+        guessVal === currValue.value ? emit("response", true, currValue.value) : emit("response", false, currValue.value)
+    }
 }
 
 const clearRomanizedText = () => {
@@ -106,8 +122,10 @@ const generateRomanizedText = (ids: Array<String>) => {
     } else if (props.inputCategory == "time") {
         romanizedText.value = grt(ids, timeObj)
     } else if (props.inputCategory == "money") {
-        // TODO
+        romanizedText.value = grt(ids, integersObj)
     } else if (props.inputCategory == "digits") {
+        romanizedText.value = grt(ids, integersObj)
+    } else if (props.inputCategory == "dates") {
         romanizedText.value = grt(ids, integersObj)
     }
 }
@@ -127,8 +145,10 @@ const play = () => {
     } else if (props.inputCategory == "time") {
         playTimeSequence(currValueIds.value)
     } else if (props.inputCategory == "money") {
-        // TODO
+        playIntegerSequence(currValueIds.value)
     } else if (props.inputCategory == "digits") {
+        playIntegerSequence(currValueIds.value)
+    } else if (props.inputCategory == "dates") {
         playIntegerSequence(currValueIds.value)
     }
 }
@@ -139,15 +159,23 @@ const validateInput = () => {
         const {validation, errorMessage } = validateIntegers(inputVal)
         if (validation.value) return inputVal
         else errorMsg.value = errorMessage.value
+
     } else if (props.inputCategory == "time") {
         const {validation, errorMessage } = validateTime(inputVal)
         if (validation.value) return inputVal.padStart(5, "0")
         else errorMsg.value = errorMessage.value
 
     } else if (props.inputCategory == "money") {
-        // TODO
+        const {validation, errorMessage } = validateMoney(inputVal)
+        if (validation.value) return inputVal
+        else errorMsg.value = errorMessage.value
+
     } else if (props.inputCategory == "digits") {
         const {validation, errorMessage } = validateDigits(inputVal)
+        if (validation.value) return inputVal
+        else errorMsg.value = errorMessage.value
+    } else if (props.inputCategory == "dates") {
+        const {validation, errorMessage } = validateDate(inputVal)
         if (validation.value) return inputVal
         else errorMsg.value = errorMessage.value
     }
@@ -175,9 +203,11 @@ const check = (event: Event) => {
         } else if (props.inputCategory == "time") {
             allowed.value = checkTime(event.data, cantoinput.value)
         } else if (props.inputCategory == "money") {
-            allowed.value = Number.isInteger(parseInt(event.data)) || event.data == "."
+            allowed.value = checkMoney(cantoinput.value)
         } else if (props.inputCategory == "digits") {
             allowed.value = checkDigits(event.data, cantoinput.value)
+        } else if (props.inputCategory == "dates") {
+            allowed.value = checkDate(event.data, cantoinput.value)
         }
 
         if (!allowed.value) {
@@ -190,6 +220,9 @@ const check = (event: Event) => {
 
 }
 
+const currValue = ref("")
+const currValueIds = ref<Array<String>>([])
+
 const generateNewValue = () => {
     currValue.value = generateRandom()
     currValueIds.value = generateAudioIds(currValue.value)
@@ -200,9 +233,6 @@ const generateNewValue = () => {
 const emit = defineEmits<{
     (e: "response", correct: boolean, value: string): void
 }>()
-
-const currValue = ref("")
-const currValueIds = ref<Array<String>>([])
 
 onMounted(() => {
     currValue.value = generateRandom()
@@ -223,8 +253,10 @@ const stopSequence = () => {
     } else if (props.inputCategory == "time") {
         stopTimeSequence()
     } else if (props.inputCategory == "money") {
-        // TODO
+        stopIntegerSequence()
     } else if (props.inputCategory == "digits") {
+        stopIntegerSequence()
+    } else if (props.inputCategory == "dates") {
         stopIntegerSequence()
     }
 }

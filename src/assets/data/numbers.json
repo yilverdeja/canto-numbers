@@ -103,5 +103,82 @@
         "yale": "yīk",
         "traditional": "亿",
         "sprite": [16541, 213]
+    },
+    {
+        "number": "cent",
+        "jyutping": "sin1",
+        "yale": "sīn",
+        "traditional": "仙",
+        "sprite": [17712, 449]
+    },
+    {
+        "number": "dime",
+        "jyutping": "hou4",
+        "yale": "hòuh",
+        "traditional": "毫",
+        "sprite": [18979, 385]
+    },
+    {
+        "number": "whole-dime",
+        "jyutping": "zi2",
+        "yale": "jí",
+        "traditional": "子",
+        "sprite": [20180, 381]
+    },
+    {
+        "number": "half",
+        "jyutping": "bun3",
+        "yale": "bun",
+        "traditional": "半",
+        "sprite": [21390, 348]
+    },
+    {
+        "number": "dollar",
+        "jyutping": "man1",
+        "yale": "mān",
+        "traditional": "蚊",
+        "sprite": [22538, 413]
+    },
+    {
+        "number": "dollar-1",
+        "jyutping": "go3",
+        "yale": "go",
+        "traditional": "個",
+        "sprite": [23768, 343]
+    },
+    {
+        "number": "two",
+        "jyutping": "loeng5",
+        "yale": "léuhng",
+        "traditional": "兩",
+        "sprite": [24926, 395]
+    },
+    {
+        "number": "year",
+        "jyutping": "nin4",
+        "yale": "nìhn",
+        "traditional": "年",
+        "sprite": [26239, 437]
+    },
+    {
+        "number": "month",
+        "jyutping": "jyut6",
+        "yale": "yuht",
+        "traditional": "月",
+        "sprite": [27463, 252]
+    },
+    {
+        "number": "day",
+        "jyutping": "jat6",
+        "yale": "yaht",
+        "traditional": "日",
+        "sprite": [28539, 252]
+    },
+    {
+        "number": "day-1",
+        "jyutping": "hou6",
+        "yale": "houh",
+        "traditional": "號",
+        "sprite": [29588, 422]
     }
 ]

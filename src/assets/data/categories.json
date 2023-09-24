@@ -51,8 +51,25 @@
         "title": "Money",
         "description": "Count money with precision in Cantonese. Whether it's dollars or cents, master currency values with up to two decimal places",
         "url": "/money",
-        "published": false,
-        "image": "/img/money.png"
+        "published": true,
+        "image": "/img/money.png",
+        "sessions": [
+            {
+                "name": "cents",
+                "value": "easy",
+                "options": {"min": 0.01, "max": 0.09}
+            },
+            {
+                "name": "0.10-0.99",
+                "value": "medium",
+                "options": {"min": 0.10, "max": 0.99}
+            },
+            {
+                "name": "dollars & cents",
+                "value": "hard",
+                "options": {"min": 1, "max": 1000}
+            }
+        ]
     },
     {
         "title": "Digits",
@@ -82,7 +99,29 @@
         "title": "Dates",
         "description": "Understand how to express specific days in specific months in Cantonese. Master date formats and calendar-related vocabulary",
         "url": "/dates",
-        "published": false,
-        "image": "/img/dates.png"
+        "published": true,
+        "image": "/img/dates.png",
+        "sessions": [
+            {
+                "name": "Days in January",
+                "value": "easy",
+                "options": {"minMonth": 1, "maxMonth": 1, "minDay": 1, "maxDay": 31}
+            },
+            {
+                "name": "Jan to June",
+                "value": "medium",
+                "options": {"minMonth": 1, "maxMonth": 6, "minDay": 1, "maxDay": 31}
+            },
+            {
+                "name": "July to Dec",
+                "value": "medium-1",
+                "options": {"minMonth": 7, "maxMonth": 12, "minDay": 1, "maxDay": 31}
+            },
+            {
+                "name": "All year",
+                "value": "hard",
+                "options": {"minMonth": 1, "maxMonth": 12, "minDay": 1, "maxDay": 31}
+            }
+        ]
     }
 ]

@@ -8,7 +8,7 @@ export function useIntegers() {
         if (newDigits.every((element) => element == "0")) return []
     
         let cutDigits = []
-        let newIds = []
+        const newIds = []
         let pos = digits.length - 1
         if (digits.length >= 9) { // call splitNumberRecu for numbers above 100,000,000 to apply pattern
             cutDigits = digits.slice(0, digits.length - 9 + 1)
