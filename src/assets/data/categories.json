@@ -123,5 +123,12 @@
                 "options": {"minMonth": 1, "maxMonth": 12, "minDay": 1, "maxDay": 31}
             }
         ]
+    },
+    {
+        "title": "Math",
+        "description": "Explore mathematical concepts and operations in Cantonese. From basic arithmetic to advanced calculations, enhance your numeracy skills and learn to express mathematical equations",
+        "url": "/math",
+        "published": false,
+        "image": "/img/math.png"
     }
 ]

@@ -49,6 +49,9 @@ Future implementations:
   - [ ] math
 - [ ] Add a Learn Page for each category
 - [ ] Create custom game settings for more personalized approach
+  - [ ] Add Timed Game Setting
+  - [ ] Select Different Options
+  - [ ] Play by inputting number, or by selecting choice
 - [ ] User Profiles to save data
 
 ## Contribution
