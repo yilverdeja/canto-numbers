@@ -2,7 +2,7 @@ import { countBy } from "lodash-es"
 export function useTime() {
 
     const splitIds = (digits: Array<String>) => {
-        let newIds = []
+        const newIds = []
     
         if (digits.length == 5) {
     
@@ -16,15 +16,15 @@ export function useTime() {
             }
             newIds.push(":") // digits[2]
     
-            let minutesStr = [digits[3], digits[4]].join("")
-            let minutesInt = parseInt(minutesStr)
+            const minutesStr = [digits[3], digits[4]].join("")
+            const minutesInt = parseInt(minutesStr)
     
-            if (minutesInt == "00") {
+            if (minutesInt == 0) {
                 return newIds
-            } else if (minutesInt == "30") {
+            } else if (minutesInt == 30) {
                 newIds.push("half")
             } else if (minutesInt % 5 == 0) {
-                let fiveCount = (minutesInt/5)
+                const fiveCount = (minutesInt/5)
                 if (fiveCount >= 11) {
                     newIds.push("10")
                     newIds.push("1")

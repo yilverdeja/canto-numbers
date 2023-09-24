@@ -1,4 +1,3 @@
-import { countBy, indexOf } from "lodash-es"
 export function useMoney() {
 
     const splitDollarIds = (digits: Array<String>) => {
@@ -8,7 +7,7 @@ export function useMoney() {
         if (newDigits.every((element) => element == "0")) return []
     
         let cutDigits = []
-        let newIds = []
+        const newIds = []
         let pos = digits.length - 1
         if (digits.length >= 9) { // call splitNumberRecu for numbers above 100,000,000 to apply pattern
             cutDigits = digits.slice(0, digits.length - 9 + 1)
@@ -124,7 +123,7 @@ export function useMoney() {
             console.log("cannot generate id's for input: ", input)
         }
 
-        if (newIds.findIndex(e => e == "dollar") > 0 && newIds[0] == "2" && newIds[1] != "10") {
+        if (newIds.findIndex(element => element == "dollar") > 0 && newIds[0] == "2" && newIds[1] != "10") {
             newIds[0] = "two"
         }
         return newIds
