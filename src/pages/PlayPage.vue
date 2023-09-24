@@ -146,7 +146,13 @@ onBeforeMount(() => {
         // TODO make sure max >= min
         
     } else if (playType == "money") {
-        // TODO
+        options.value = {
+            min: ("min" in query.value && !Number.isNaN(Number(query.value.min)) && Number(query.value.min) > 0 && Number(query.value.min) < 1000000) ? Number(query.value.min) : 0,
+            max: ("max" in query.value && !Number.isNaN(Number(query.value.max)) && Number(query.value.max) > 0 && Number(query.value.max) < 1000000) ? Number(query.value.max) : 10
+        }
+
+        // TODO make sure max >= min
+
     } else if (playType == "digits") {
         if ("minRange" in query.value && !Number.isNaN(Number(query.value.minRange)) && Number(query.value.minRange) >= 0) options.value["minRange"] = Number(query.value.minRange)
         if ("maxRange" in query.value && !Number.isNaN(Number(query.value.maxRange)) && Number(query.value.maxRange) >= 0) options.value["maxRange"] = Number(query.value.maxRange)
