@@ -16,10 +16,14 @@ Canto Numbers currently offers the following features:
   - Numbers from 0 to 1000
   - Time in 12-hour format from 1:00 to 12:59
   - Multiple Digits
+  - Money from cents, dimes to a combination of dollars and cents
+  - Dates in a dd/mm format
 - Generate Category Audio with text
   - Numbers from 0 to 999,999,999,999
   - Time from 1:00 to 12:59
   - Single to Multiple Digits
+  - Money from 0.01 to 1000.99
+  - Dates in a dd/mm format
 - Keep track of your correct and missed guesses with a counter score, which is saved on your local host.
 - See simple session stats within the stats page
 - Requires sound to listen to the audio.
@@ -37,9 +41,9 @@ Future implementations:
 - [ ] Add different number categories
   - [x] integers
   - [x] time
-  - [ ] money (decimals)
+  - [x] money
   - [x] digits
-  - [ ] dates
+  - [x] dates
   - [ ] math
 - [ ] Create game settings for more personalized approach
 
