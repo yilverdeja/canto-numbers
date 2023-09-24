@@ -38,6 +38,8 @@ Future implementations:
 - [x] Expanding the range of numbers.
 - [ ] Adding a stats dashboard to see progress.
 - [ ] Incorporating more audio variations for each number.
+  - [ ] Manage a single mp3 and json file for all variations
+  - [ ] Create a system to play different variations in play & practice
 - [ ] Add different number categories
   - [x] integers
   - [x] time
@@ -45,7 +47,9 @@ Future implementations:
   - [x] digits
   - [x] dates
   - [ ] math
-- [ ] Create game settings for more personalized approach
+- [ ] Add a Learn Page for each category
+- [ ] Create custom game settings for more personalized approach
+- [ ] User Profiles to save data
 
 ## Contribution
 
