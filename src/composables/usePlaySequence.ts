@@ -37,7 +37,6 @@ export function usePlaySequence({sfx, spriteMap}) {
     })
 
     const playSequence = (ids) => {
-        console.log("play sequence", ids)
         if (!isLoaded.value) return
         if (idList.value.length > 0) {
             stop()

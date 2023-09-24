@@ -103,6 +103,7 @@ const getRomanizedText = (romanization: string) => {
 }
 
 const submitRequest = (requestVal: string) => {
+    errorMsg.value = ""
     const newIds = ref(generateAudioIds(requestVal))
     generateRomanizedText(newIds.value)
     play(newIds.value)
@@ -166,7 +167,7 @@ const check = (event: Event) => {
         } else if (props.inputCategory == "time") {
             allowed.value = checkTime(event.data, cantoinput.value)
         } else if (props.inputCategory == "money") {
-            allowed.value = checkMoney(event.data, cantoinput.value)
+            allowed.value = checkMoney(cantoinput.value)
         } else if (props.inputCategory == "digits") {
             allowed.value = checkDigits(event.data)
         }

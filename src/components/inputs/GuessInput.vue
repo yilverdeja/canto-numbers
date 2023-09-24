@@ -92,7 +92,6 @@ const props = defineProps({
 
 })
 
-// TODO money 1 is the same as 1.00 or 0.1 is the same as 0.10
 const submitGuess = (guessVal: string) => {
     if (!Number.isNaN(Number(guessVal))) {
         Number(guessVal) === Number(currValue.value) ? emit("response", true, currValue.value) : emit("response", false, currValue.value)
@@ -136,7 +135,6 @@ const play = () => {
     } else if (props.inputCategory == "time") {
         playTimeSequence(currValueIds.value)
     } else if (props.inputCategory == "money") {
-        console.log("money play", currValueIds.value)
         playIntegerSequence(currValueIds.value)
     } else if (props.inputCategory == "digits") {
         playIntegerSequence(currValueIds.value)
@@ -189,7 +187,7 @@ const check = (event: Event) => {
         } else if (props.inputCategory == "time") {
             allowed.value = checkTime(event.data, cantoinput.value)
         } else if (props.inputCategory == "money") {
-            allowed.value = checkMoney(event.data, cantoinput.value)
+            allowed.value = checkMoney(cantoinput.value)
         } else if (props.inputCategory == "digits") {
             allowed.value = checkDigits(event.data, cantoinput.value)
         }
@@ -209,9 +207,7 @@ const currValueIds = ref<Array<String>>([])
 
 const generateNewValue = () => {
     currValue.value = generateRandom()
-    console.log(currValue.value)
     currValueIds.value = generateAudioIds(currValue.value)
-    console.log(currValueIds.value)
     generateRomanizedText(currValueIds.value)
 }
 
@@ -222,7 +218,6 @@ const emit = defineEmits<{
 
 onMounted(() => {
     currValue.value = generateRandom()
-    console.log(currValue.value)
     currValueIds.value = generateAudioIds(currValue.value)
     generateRomanizedText(currValueIds.value)
 })

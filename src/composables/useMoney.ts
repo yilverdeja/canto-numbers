@@ -71,10 +71,8 @@ export function useMoney() {
     }
 
     const generateRandom = (options: {max: number, min: number}) => {
-        console.log(options.max, options.min)
         const randomVal = Math.random() * (options.max - options.min + 0.01) + options.min
         const decimalVal = Math.floor(randomVal * 100) / 100
-        console.log(randomVal, decimalVal)
         return decimalVal.toString()
     }
 
@@ -82,16 +80,17 @@ export function useMoney() {
         const newIds = []
         const digits = input.split("")
         const inputNumber = Number(input)
-        console.log("gen ids of", input)
+        const indexOfPoint = input.indexOf(".")
+
         if (Number.isInteger(inputNumber)) {
-            console.log("is integer")
-            newIds.push(...splitDollarIds(digits))
-            console.log(newIds)
+            if (indexOfPoint > 0) {
+                newIds.push(...splitDollarIds(digits.slice(0, indexOfPoint)))
+            } else {
+                newIds.push(...splitDollarIds(digits))
+            }
             newIds.push("dollar")
 
         } else if (!Number.isNaN(inputNumber)) { // float
-            const indexOfPoint = input.indexOf(".")
-            console.log("is float", indexOfPoint)
             if (inputNumber == 1.5) {
                 newIds.push("dollar")
                 newIds.push("half")
@@ -102,13 +101,11 @@ export function useMoney() {
             if (centDigits.length == 1) centDigits.push("0")
 
             if (inputNumber >= 1) { // dollars and cents
-                console.log("dollars", digits.slice(0, indexOfPoint), "cents", centDigits, "all", digits)
                 newIds.push(...splitDollarIds(digits.slice(0, indexOfPoint)))
                 newIds.push("dollar")
                 newIds.push(...splitCentIds(centDigits))
 
             } else { // cents
-                console.log("cents", centDigits)
                 if (centDigits[0] == "0") {
                     newIds.push(centDigits[1] == "2" ? "two" : centDigits[1])
                     newIds.push("cent")
@@ -133,10 +130,18 @@ export function useMoney() {
         return newIds
     }
 
-    // TODO allow whole numbers and one decimal place (2 decimal places max)
-    const checkInput = (character: string, input: string) => {
-        // return Number.isInteger(parseInt(character))
-        return Number.isInteger(parseInt(character)) || (character == "." && countBy(input)["."] == 1) || (input.charAt(input.length-3) == ".")
+    const checkInput = (input: string) => {
+        const inputIsNum = !Number.isNaN(Number(input)) && (Math.floor(Number(input)*100)/100) == Number(input)
+        if (inputIsNum) {
+            const indexOfPoint = input.indexOf(".")
+            if (indexOfPoint >= 0) {
+                return indexOfPoint >= input.length-3
+            } else {
+                return true
+            }
+        } else {
+            return false
+        }
     }
 
     const validateInput = (input: string) => {
