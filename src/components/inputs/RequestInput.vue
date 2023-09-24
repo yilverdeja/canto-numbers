@@ -11,6 +11,7 @@ import { useIntegers } from '@/composables/useIntegers'
 import { useTime } from '@/composables/useTime'
 import { useMoney } from '@/composables/useMoney'
 import { useDigits } from '@/composables/useDigits'
+import { useDates } from '@/composables/useDates'
 
 const cantoinput = ref("")
 const romanizedText = ref({})
@@ -25,6 +26,7 @@ const { generateIntegerIds, checkIntegers , validateIntegers } = useIntegers()
 const { generateTimeIds, checkTime , validateTime } = useTime()
 const { generateMoneyIds, checkMoney , validateMoney } = useMoney()
 const { generateDigitsIds, checkDigits , validateDigits  } = useDigits()
+const { generateDateIds, checkDate , validateDate } = useDates()
 
 const generateAudioIds = (numValue: string) => {
 
@@ -40,6 +42,8 @@ const generateAudioIds = (numValue: string) => {
     } else if (props.inputCategory == "digits") {
         return generateDigitsIds(numValue)
 
+    } else if (props.inputCategory == "dates") {
+        return generateDateIds(numValue)
     }
 
     return []
@@ -66,7 +70,7 @@ const props = defineProps({
         type: String,
         default: "integers",
         validator(value: string) {
-            return ["integers", "time", "money", "digits"].includes(value)
+            return ["integers", "time", "money", "digits", "dates"].includes(value)
         },
         required: true
     },
@@ -89,6 +93,8 @@ const generateRomanizedText = (ids: Array<String>) => {
     } else if (props.inputCategory == "money") {
         romanizedText.value = grt(ids, integersObj)
     } else if (props.inputCategory == "digits") {
+        romanizedText.value = grt(ids, integersObj)
+    } else if (props.inputCategory == "dates") {
         romanizedText.value = grt(ids, integersObj)
     }
 }
@@ -118,6 +124,8 @@ const play = (ids: Array<String>) => {
         playIntegerSequence(ids)
     } else if (props.inputCategory == "digits") {
         playIntegerSequence(ids)
+    } else if (props.inputCategory == "dates") {
+        playIntegerSequence(ids)
     }
 }
 
@@ -143,6 +151,10 @@ const validateInput = () => {
         if (validation.value) return inputVal
         else errorMsg.value = errorMessage.value
 
+    } else if (props.inputCategory == "dates") {
+        const {validation, errorMessage } = validateDate(inputVal)
+        if (validation.value) return inputVal
+        else errorMsg.value = errorMessage.value
     }
 
     return null
@@ -170,6 +182,8 @@ const check = (event: Event) => {
             allowed.value = checkMoney(cantoinput.value)
         } else if (props.inputCategory == "digits") {
             allowed.value = checkDigits(event.data)
+        } else if (props.inputCategory == "dates") {
+            allowed.value = checkDate(event.data, cantoinput.value)
         }
 
         if (!allowed.value) {
@@ -197,6 +211,8 @@ const stopSequence = () => {
     } else if (props.inputCategory == "money") {
         stopIntegerSequence()
     } else if (props.inputCategory == "digits") {
+        stopIntegerSequence()
+    } else if (props.inputCategory == "dates") {
         stopIntegerSequence()
     }
 }

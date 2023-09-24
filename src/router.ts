@@ -117,6 +117,29 @@ const routes = [
     },
   },
   {
+    path: '/dates',
+    name: "dates",
+    component: TypeHome,
+    meta: {
+      title: 'Canto Dates'
+    }
+  },
+  {
+    path: '/dates/play',
+    name: "playdates",
+    component: PlayPage,
+    meta: {
+      title: 'Play Canto Dates',
+    },
+  },
+  {
+    path: '/dates/practice',
+    component: PracticePage,
+    meta: {
+      title: 'Practice Canto Dates',
+    },
+  },
+  {
     path: '/stats',
     name: "stats",
     component: StatsPage,

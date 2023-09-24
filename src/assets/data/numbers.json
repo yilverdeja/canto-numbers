@@ -152,5 +152,33 @@
         "yale": "léuhng",
         "traditional": "兩",
         "sprite": [24926, 395]
+    },
+    {
+        "number": "year",
+        "jyutping": "nin4",
+        "yale": "nìhn",
+        "traditional": "年",
+        "sprite": [26239, 437]
+    },
+    {
+        "number": "month",
+        "jyutping": "jyut6",
+        "yale": "yuht",
+        "traditional": "月",
+        "sprite": [27463, 252]
+    },
+    {
+        "number": "day",
+        "jyutping": "jat6",
+        "yale": "yaht",
+        "traditional": "日",
+        "sprite": [28539, 252]
+    },
+    {
+        "number": "day-1",
+        "jyutping": "hou6",
+        "yale": "houh",
+        "traditional": "號",
+        "sprite": [29588, 422]
     }
 ]

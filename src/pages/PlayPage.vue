@@ -1,5 +1,9 @@
 <script setup lang="ts">
 /* IMPORTS & CONSTANTS */
+import dayjs from 'dayjs'
+import customParseFormat from "dayjs/plugin/customParseFormat"
+dayjs.extend(customParseFormat)
+
 import { storeToRefs } from 'pinia'
 import { debounce } from "lodash-es"
 const route = useRoute()
@@ -160,6 +164,29 @@ onBeforeMount(() => {
         if ("maxDigits" in query.value && !Number.isNaN(Number(query.value.maxDigits)) && Number(query.value.maxDigits) > 0) options.value["maxDigits"] = Number(query.value.maxDigits)
 
         // TODO make sure max >= min
+
+    } else if (playType == "dates") {
+        options.value = {
+            minMonth: ("minMonth" in query.value && !Number.isNaN(Number(query.value.minMonth)) && Number(query.value.minMonth) >= 1 && Number(query.value.minMonth) <= 12) ? Number(query.value.minMonth) : 1,
+            maxMonth: ("maxMonth" in query.value && !Number.isNaN(Number(query.value.maxMonth)) && Number(query.value.maxMonth) >= 1 && Number(query.value.maxMonth) <= 12) ? Number(query.value.maxMonth) : 12,
+            minDay: ("minDay" in query.value && !Number.isNaN(Number(query.value.minDay)) && Number(query.value.minDay) >= 1 && Number(query.value.minDay) <= 31) ? Number(query.value.minDay) : 1,
+            maxDay: ("maxDay" in query.value && !Number.isNaN(Number(query.value.maxDay)) && Number(query.value.maxDay) >= 1 && Number(query.value.maxDay) <= 31) ? Number(query.value.maxDay) : 31
+        }
+
+        // TODO make sure max >= min
+
+        // TODO may get stuck in a loop if the options are actually not a valid date...
+        // let currMinDay = options.value.minDay
+
+        // Force minDay to be a minimum of 28 if it surpasses 28
+        if (options.value.minDay >= 28) {
+            options.value.minDay = 28
+        }
+        // while(!(dayjs(`${2020}-${month}-${currMinDay}`, "YYYY-MM-DD", true).isValid())){
+        //     currMinDay -= 1
+        // }
+        
+        
 
     }
 })
