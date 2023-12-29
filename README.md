@@ -62,5 +62,3 @@ We welcome contributions from the community to make Canto Numbers even better. I
 5. Submit a pull request, describing the changes you've made and why they are valuable.
 
 Thank you for considering contributing to Canto Numbers! Together, we can make learning Cantonese numbers a fun and engaging experience for everyone.
-
-[![Visits Badge](https://badges.pufler.dev/visits/yilverdeja/canto-numbers)](https://badges.pufler.dev)
